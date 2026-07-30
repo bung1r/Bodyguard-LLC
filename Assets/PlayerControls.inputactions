@@ -25,13 +25,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "caf02ebe-8f11-4cc6-add4-8f469d4bf1e2",
-                    "expectedControlType": "Vector2",
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "97aa3f5e-f716-4063-8544-caf5b7934820",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Shift",
+                    "type": "Button",
+                    "id": "f6c85dc4-b773-4778-910d-befc58a7b777",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -136,12 +145,23 @@
                 },
                 {
                     "name": "",
-                    "id": "c9d1ef77-7f03-4637-abc6-f9f2ed6b46bb",
-                    "path": "<Mouse>/delta",
+                    "id": "5fbe525d-65fa-4564-a416-d5c1b0e43857",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Look",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "25702d1b-01dc-4fad-ba42-a668d380269e",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

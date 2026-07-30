@@ -17,6 +17,7 @@ public class RuntimeBaseStats : BaseStats
     public float currentSpeed;
     public bool isSprinting;
     public bool isWalking;
+    public bool isCrouching;
     public RuntimeBaseStats(BaseStats baseStats)
     {
         maxHealth = baseStats.maxHealth;

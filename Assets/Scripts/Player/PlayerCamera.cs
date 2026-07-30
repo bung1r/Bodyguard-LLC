@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class PlayerCamera : MonoBehaviour
 {
 
     [SerializeField] float sensX;
@@ -10,6 +10,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     [SerializeField] private InputActionAsset playerControls;
     private Vector2 lookInput;
     private InputAction lookAction;
+    
 
     [SerializeField] Transform playerCamera;
     float xRotation = 0f;
