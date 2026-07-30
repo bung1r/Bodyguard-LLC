@@ -15,9 +15,9 @@ MonoBehaviour:
   isPlayer: 0
   isEnemy: 0
   baseStats:
-    maxHealth: 100
-    speed: 6
-    sprintSpeedMult: 1.8
+    maxHealth: 1
+    speed: 4
+    sprintSpeedMult: 1.5
     turnSpeed: 100
   playerStats:
     testBool: 0
