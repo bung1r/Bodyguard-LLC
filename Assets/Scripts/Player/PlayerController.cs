@@ -79,23 +79,6 @@ public class PlayerController : MonoBehaviour
     //         baseStats.isCrouching = !baseStats.isCrouching;
     //     }
     // }
-    // calc stands for calculate <- I feel like this shouldbe an onEnter thing
-    // float CalcSpeed() {
-
-    //     float speed = baseStats.speed;
-
-    //     if (movementState == PlayerMovementState.Running)
-    //     {
-    //         speed *= baseStats.sprintSpeedMult;
-    //     }
-
-    //     // if (baseStats.isCrouching)
-    //     // {
-    //     //     speed *= 0.3f;
-    //     // }
-
-    //     return speed;
-    // }
 
     // ACTIONS
 
@@ -104,7 +87,22 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            
+            int layer = (1 << 9);
+            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, layer)) 
+            {
+                // check if we got the employer 
+                Debug.Log("Interacted with the employer");
+                if (hit.transform.root.TryGetComponent<EmployerAI>(out var employerAI))
+                {
+                    if (employerAI.GetState() == EnemyStates.Following)
+                    {
+                        employerAI.SetState(EnemyStates.Idle);
+                    } else
+                    {
+                        employerAI.SetState(EnemyStates.Following);
+                    }
+                }
+            }
         }
     }
 
