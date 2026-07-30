@@ -4,17 +4,26 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpHeight = 2f;
-    [SerializeField] private float gravity = -9.8f;
+    [SerializeField] Transform playerCamera;
 
+    enum PlayerMovementState { Running, Sneaking, Airborne, Action, Weapon }
+    // Running is basically an idle state as well, as action + weapon should retain sprint speed(?)
+    PlayerMovementState movementState; 
+
+    private bool inAction;
+
+    [SerializeField] private float jumpHeight = 1f;
+    [SerializeField] private float gravity = -9.8f;
+    private float speed;
     private StatManager statManager;
     private RuntimeStats runtimeStats;
     private RuntimeBaseStats baseStats;
     private RuntimePlayerStats playerStats;
     private CharacterController controller;
-    private Vector3 moveInput;
+    private Vector3 moveInput; 
     private Vector3 velocity;
+
+    private bool sneakLatch; //stupid fucking variable but its very late rn
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,11 +36,15 @@ public class PlayerController : MonoBehaviour
             runtimeStats = statManager.GetRuntimeStats();
             baseStats = runtimeStats.GetBaseStats();
             playerStats = runtimeStats.GetPlayerStats();
-
-            baseStats.isSprinting = true;
-            baseStats.isWalking = false;
         }
+
+        movementState = PlayerMovementState.Running;
+        speed = baseStats.speed * baseStats.sprintSpeedMult;
+
+        inAction = false;
     }
+
+    // MOVEMENT
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -40,13 +53,52 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed && controller.isGrounded)
+        if (context.performed && (movementState == PlayerMovementState.Running || movementState == PlayerMovementState.Sneaking))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
 
-    // e to interact
+    public void OnShift(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            sneakLatch = true;
+        }
+
+        if (context.canceled)
+        {
+            sneakLatch = false;
+        }
+    }
+
+    // public void OnCrouch(InputAction.CallbackContext context)
+    // {
+    //     if (context.performed)
+    //     {
+    //         baseStats.isCrouching = !baseStats.isCrouching;
+    //     }
+    // }
+    // calc stands for calculate <- I feel like this shouldbe an onEnter thing
+    // float CalcSpeed() {
+
+    //     float speed = baseStats.speed;
+
+    //     if (movementState == PlayerMovementState.Running)
+    //     {
+    //         speed *= baseStats.sprintSpeedMult;
+    //     }
+
+    //     // if (baseStats.isCrouching)
+    //     // {
+    //     //     speed *= 0.3f;
+    //     // }
+
+    //     return speed;
+    // }
+
+    // ACTIONS
+
     //  handles stuff like talking to the employer and doors
     public void OnInteract(InputAction.CallbackContext context)
     {
@@ -56,53 +108,63 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnShift(InputAction.CallbackContext context)
+    // Kick input/check logic
+    public void OnKick(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && inAction == false)
         {
-            baseStats.isWalking = true;
-            baseStats.isSprinting = false;
-        }
-
-        if (context.canceled)
-        {
-            baseStats.isWalking = false;
-            baseStats.isSprinting = true;
+            inAction = true;
+            KickDo();
+            Invoke(nameof(ResetFromAction), 0.5f);
         }
     }
 
-    public void OnCrouch(InputAction.CallbackContext context)
+    // Kick hit logic
+    void KickDo()
     {
-        if (context.performed)
+        int kickLayerMask = (1 << 7) | (1 << 8); //raycast only hits enemies and prop layers
+        if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, ~kickLayerMask))
         {
-            baseStats.isCrouching = !baseStats.isCrouching;
+            Debug.Log("hit something with kick!");
         }
     }
-    // calc stands for calculate
-    float CalcSpeed() {
-        float speed = baseStats.speed;
-        if (baseStats.isSprinting)
-        {
-            speed *= baseStats.sprintSpeedMult;
-        }
 
-        if (baseStats.isCrouching)
-        {
-            speed *= 0.3f;
-        }
 
-        return speed;
-    }
-    // Update is called once per frame
+    void ResetFromAction()
+    {
+        inAction = false;
+        //anything else here(?)
+    } 
+
+    // State Logic
+
     void Update()
     {
-        speed = CalcSpeed();
-        Debug.Log(speed);
 
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
         controller.Move(move * speed * Time.deltaTime);
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        StateCheck();
+    }
+
+    void StateCheck()
+    {
+        if (!controller.isGrounded)
+        {
+            movementState = PlayerMovementState.Airborne;
+        } else {
+            if (sneakLatch)
+            {
+                movementState = PlayerMovementState.Sneaking;
+                speed = baseStats.speed;
+            } else
+            {
+                movementState = PlayerMovementState.Running;
+                speed = baseStats.speed * baseStats.sprintSpeedMult;
+            }
+        }
     }
 }

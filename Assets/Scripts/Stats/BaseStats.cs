@@ -15,9 +15,9 @@ public class RuntimeBaseStats : BaseStats
 {
     public float currentHealth;
     public float currentSpeed;
-    public bool isSprinting;
-    public bool isWalking;
-    public bool isCrouching;
+    // public bool isSprinting; -- Better to use a state machine and enemies prob wont need this
+    // public bool isWalking;
+    // public bool isCrouching;
     public RuntimeBaseStats(BaseStats baseStats)
     {
         maxHealth = baseStats.maxHealth;
