@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+
+// Enum state is really a mess, I should just remove Sneaking (will refactor later message)
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private bool inAction;
 
-    [SerializeField] private float jumpHeight = 1f;
+    [SerializeField] private float jumpHeight = 0.65f;
     [SerializeField] private float gravity = -9.8f;
     private float speed;
     private EmployerAI employer;
@@ -23,7 +26,12 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 moveInput; 
     private Vector3 velocity;
+
+    [SerializeField] private float kickForce = 7.0f;
+
+    private Vector3 kickOffset = new Vector3(0,-0.5f,0);
     
+    public GameObject guntext;
 
     private bool sneakLatch; //stupid fucking variable but its very late rn
 
@@ -145,18 +153,57 @@ public class PlayerController : MonoBehaviour
         if (context.performed && inAction == false)
         {
             inAction = true;
-            KickDo();
             Invoke(nameof(ResetFromAction), 0.5f);
+            KickDo();
         }
+    }
+
+    bool checkIsGrounded(GameObject gameObject)
+    {
+        float distToGround = gameObject.GetComponent<Collider>().bounds.extents.y;
+        return Physics.Raycast(GetComponent<Collider>().gameObject.transform.position, -Vector3.up, distToGround + 0.2f);
     }
 
     // Kick hit logic
     void KickDo()
     {
-        int kickLayerMask = (1 << 7) | (1 << 8); //raycast only hits enemies and prop layers
-        if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, ~kickLayerMask))
+        int kickLayerMask = (1 << 7) | (1 << 8); //raycast only hits enemies and phys prop layers
+        if(Physics.Raycast(transform.position + kickOffset, playerCamera.transform.forward, out RaycastHit hit, 5.0f, kickLayerMask))
         {
-            Debug.Log("hit something with kick!");
+            Debug.Log($"hit {hit.collider.gameObject.name} with kick!");
+            if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
+
+            Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
+            if(checkIsGrounded(hit.collider.gameObject))
+            {
+                direction.z = 0.0f;
+            }
+            hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * kickForce, ForceMode.Impulse);
+        }
+    }
+
+    public void OnShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed && inAction == false)
+        {
+            inAction = true;
+            guntext.SetActive(true);
+        }
+
+        if (context.canceled && inAction == true)
+        {
+            guntext.SetActive(false);
+
+            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 10.0f, ((1 << 7) | (1 << 8)) ))
+            {
+                Debug.Log($"hit {hit.collider.gameObject.name} with bullet!");
+                if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
+
+                Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
+                hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * 7.0f, ForceMode.Impulse);
+            }
+
+            Invoke(nameof(ResetFromAction), 0.5f);
         }
     }
 

@@ -27,5 +27,5 @@ MonoBehaviour:
     cautionDistance: 3
     deaggroDistance: 12
     startAttackDist: 2.5
-    rotationSpeed: 100
+    rotationSpeed: 150
     timeBetweenAttacks: 2

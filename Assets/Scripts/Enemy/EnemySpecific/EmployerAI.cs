@@ -44,6 +44,8 @@ public class EmployerAI : EnemyAI
     {
         // override so there's nothing. 
     }
+
+    // bro why is this here??
     private float startedWork = -999f;
     public override void EnterSearching()
     {
