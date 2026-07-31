@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpHeight = 1f;
     [SerializeField] private float gravity = -9.8f;
     private float speed;
+    private EmployerAI employer;
     private StatManager statManager;
     private RuntimeStats runtimeStats;
     private RuntimeBaseStats baseStats;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 moveInput; 
     private Vector3 velocity;
+    
 
     private bool sneakLatch; //stupid fucking variable but its very late rn
 
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviour
     {
         statManager = GetComponent<StatManager>();
         controller = GetComponent<CharacterController>();
+        employer = FindFirstObjectByType<EmployerAI>();
+        if (employer == null) Debug.LogError("Employer could not be found");
 
         if (statManager != null)
         {
@@ -105,7 +109,36 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void OnLeftClick(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // a bunch of stuff, 'innit?
 
+            // Shooting should take priority, probably.
+
+            if (employer.GetState() == EnemyStates.Following)
+            {
+                if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, (1 << 10))
+                && Vector3.Distance(transform.position, hit.point) <= 10f)
+                {
+                    // facing the floor and point is less than 10 meters  away
+                    employer.SetGoToPosPosition(hit.point);
+                    employer.SetState(EnemyStates.GoToPos); // go to the point in the floor.
+                } else if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit employerHit, 5.0f, (1 << 9))
+                && Vector3.Distance(transform.position, employerHit.point) <= 5f)
+                {
+                    // if you click on the employer, he will go back to work. 
+                    employer.SetState(EnemyStates.Chasing);
+                }
+                
+            }
+        }
+    }
+    public void OnRightClick(InputAction.CallbackContext context)
+    {
+        
+    }
     // Kick input/check logic
     public void OnKick(InputAction.CallbackContext context)
     {
