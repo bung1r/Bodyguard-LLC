@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: Sniper
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   isPlayer: 0
-  isEnemy: 0
+  isEnemy: 1
   baseStats:
-    maxHealth: 100
-    speed: 6
+    maxHealth: 1
+    speed: 0
     sprintSpeedMult: 1.8
-    turnSpeed: 100
+    turnSpeed: 400
   playerStats:
     testBool: 0
   enemyStats:
-    aggroDistance: 8
+    aggroDistance: 100
     walkingDistance: 5
     cautionDistance: 3
-    deaggroDistance: 12
-    startAttackDist: 1.5
+    deaggroDistance: 300
+    startAttackDist: 200
     rotationSpeed: 100
-    timeBetweenAttacks: 2
+    timeBetweenAttacks: 10

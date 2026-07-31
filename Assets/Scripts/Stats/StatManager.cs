@@ -31,9 +31,9 @@ public class StatManager : MonoBehaviour, IDamageable
     }
     public void Die(DamageData damageData)
     {
-        Debug.Log(gameObject.name + " died from " + damageData.source.name);
+        // Debug.Log(gameObject.name + " died from " + damageData.source.name);
         
-        Destroy(gameObject, 1f);
+        // Destroy(gameObject, 1f);
         // Handle death here (e.g., play animation, disable character, etc.)
     }
 

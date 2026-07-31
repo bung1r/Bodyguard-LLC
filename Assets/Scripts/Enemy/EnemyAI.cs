@@ -12,6 +12,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected RuntimeStats runtimeStats;
     protected RuntimeBaseStats baseStats;
     protected RuntimeEnemyStats enemyStats;
+    public GameObject bulletPrefab;
     public EnemyStates initialState = EnemyStates.Wandering;
     [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
     protected Vector3 goToPosPosition;
@@ -253,10 +254,12 @@ public abstract class EnemyAI : MonoBehaviour
         agent.speed = baseStats.speed;
     }
     // ---------- ATTACKING ----------------------
+    protected float lastAttacked = -999f;
     public virtual void EnterAttacking()
     {
         // i will not bother with ts yet. 
         agent.isStopped = true;
+        lastAttacked = Time.time;
     }
     public virtual void Attacking()
     {
@@ -266,6 +269,13 @@ public abstract class EnemyAI : MonoBehaviour
             SetState(EnemyStates.Chasing);
             return;
         }
+
+        if (Time.time - lastAttacked > enemyStats.timeBetweenAttacks)
+        {
+            Attack();
+            lastAttacked = Time.time;
+        }
+        
         RotateManually(player.transform.position);
     }
     public virtual void ExitAttacking()
@@ -378,8 +388,52 @@ public abstract class EnemyAI : MonoBehaviour
             rotationSpeed * Time.deltaTime
         );
     }
-    
+    public void VisualizeBullet(Vector3 pos1, Vector3 pos2)
+    {
+        GameObject bullet = Instantiate(bulletPrefab);
+        bullet.transform.position = (pos1 + pos2) / 2f;
+        bullet.transform.localScale = new Vector3(
+            bullet.transform.localScale.x, 
+            bullet.transform.localScale.y, 
+            Vector3.Distance(pos1, pos2)
+        );
+        bullet.transform.localRotation = Quaternion.LookRotation(pos1 - pos2);
+        
+        Destroy(bullet, 0.5f);
+    }
+    public virtual void Attack() // whatever your attack is 
+    {
+        Attack(new DamageData{source = gameObject, damageType = DamageType.Pierce, damageAmount = 1f}, 5f);
+    }
+    public virtual void Attack(DamageData damageData, float spreadAngle) // whatever your attack is 
+    {
+        Vector3 target = transform.position;
+        if (visibleEmployers.Length > 0)
+        {
+            target = visibleEmployers[0].transform.position;
+        } else if (visiblePlayers.Length > 0)
+        {
+            target = visiblePlayers[0].transform.position;
+        }
+        Vector3 direction = (target - transform.position).normalized;
+        int attackMask = (1 << 3) | (1 << 6) | (1 << 9) | (1 << 10); // obstacles, players, floor
+        float yaw = Random.Range(-spreadAngle, spreadAngle);
+        float pitch = Random.Range(-spreadAngle, spreadAngle);
+        Quaternion spread = Quaternion.Euler(pitch, yaw, 0);
 
+        Vector3 finalDirection = spread * direction;
+        
+        if(Physics.Raycast(transform.position, finalDirection, out RaycastHit hit, 200f, attackMask))
+        {
+            VisualizeBullet(transform.position, hit.point);
+            if (hit.transform.root.TryGetComponent<StatManager>(out var statManager))
+            {
+                statManager.TakeDamage(damageData);
+            }
+
+        }
+    }
+    
 
 
 }

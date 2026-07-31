@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: BigGoon
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   isPlayer: 0
-  isEnemy: 0
+  isEnemy: 1
   baseStats:
-    maxHealth: 100
-    speed: 6
-    sprintSpeedMult: 1.8
-    turnSpeed: 100
+    maxHealth: 2
+    speed: 2.5
+    sprintSpeedMult: 2
+    turnSpeed: 80
   playerStats:
     testBool: 0
   enemyStats:
-    aggroDistance: 8
+    aggroDistance: 20
     walkingDistance: 5
     cautionDistance: 3
-    deaggroDistance: 12
-    startAttackDist: 1.5
-    rotationSpeed: 100
-    timeBetweenAttacks: 2
+    deaggroDistance: 30
+    startAttackDist: 6
+    rotationSpeed: 80
+    timeBetweenAttacks: 6

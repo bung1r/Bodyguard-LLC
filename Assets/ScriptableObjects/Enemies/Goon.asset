@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: Goon
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
   isPlayer: 0
-  isEnemy: 0
+  isEnemy: 1
   baseStats:
-    maxHealth: 100
-    speed: 6
-    sprintSpeedMult: 1.8
+    maxHealth: 1
+    speed: 3.2
+    sprintSpeedMult: 1.5
     turnSpeed: 100
   playerStats:
     testBool: 0
   enemyStats:
-    aggroDistance: 8
+    aggroDistance: 15
     walkingDistance: 5
     cautionDistance: 3
-    deaggroDistance: 12
-    startAttackDist: 1.5
+    deaggroDistance: 20
+    startAttackDist: 8
     rotationSpeed: 100
     timeBetweenAttacks: 2
