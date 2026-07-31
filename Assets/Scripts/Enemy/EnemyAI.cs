@@ -368,7 +368,7 @@ public abstract class EnemyAI : MonoBehaviour
     {
         if (!agent.pathPending &&
         agent.remainingDistance <= agent.stoppingDistance &&
-        (!agent.hasPath || agent.velocity.sqrMagnitude == 0f))
+        !agent.hasPath)
         {
             return true;
         } 

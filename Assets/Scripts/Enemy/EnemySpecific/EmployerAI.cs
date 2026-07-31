@@ -30,14 +30,17 @@ public class EmployerAI : EnemyAI
 
         agent.isStopped = false;
         agent.speed = baseStats.speed * baseStats.sprintSpeedMult;
-        Transform objective = objectives[objectiveIndex];
-        agent.SetDestination(objective.position + objective.forward * 1.2f); 
+        // Transform objective = objectives[objectiveIndex];
+        // agent.SetDestination(objective.position + objective.forward * 1.2f); 
     }
     public override void Chasing()
     {
+        Transform objective = objectives[objectiveIndex];
+        agent.SetDestination(objective.position + objective.forward * 1.2f); 
         if (ReachedDestination())
         {
             SetState(EnemyStates.Searching);
+            return;
         }
     }
     public override void ExitChasing()
@@ -65,11 +68,13 @@ public class EmployerAI : EnemyAI
         {
             SetState(EnemyStates.Chasing);
             objectiveIndex++;
+            return;
         }
     }
     public override void ExitSearching()
     {
         agent.updateRotation = true;
+        agent.isStopped = false;
     }
 }
 
