@@ -55,6 +55,11 @@ public class EmployerAI : EnemyAI
     }
     public override void Searching()
     {
+        if (objectiveIndex == objectives.Count)
+        {
+            SetState(EnemyStates.Idle);
+            return;
+        }
         RotateManually(objectives[objectiveIndex].position);
         if (Time.time - startedWork > timePerObjective)
         {
@@ -65,7 +70,6 @@ public class EmployerAI : EnemyAI
     public override void ExitSearching()
     {
         agent.updateRotation = true;
-        Debug.Log("hello? This should be true, innit?");
     }
 }
 

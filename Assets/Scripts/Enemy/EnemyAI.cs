@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,9 +12,14 @@ public abstract class EnemyAI : MonoBehaviour
     protected RuntimeStats runtimeStats;
     protected RuntimeBaseStats baseStats;
     protected RuntimeEnemyStats enemyStats;
-    [SerializeField] protected EnemyStates currentState; // ONLY change this. Preferably, use SetState()
-    protected EnemyStates prevState; // do NOT change this manually
+    public EnemyStates initialState = EnemyStates.Wandering;
+    [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
     protected Vector3 goToPosPosition;
+    protected bool enableVisionCone = true;
+
+    public int seed = 1_000_000;
+    System.Random wanderRNG;
+    
     protected virtual void Start()
     {
         // enemy stuff
@@ -29,23 +36,62 @@ public abstract class EnemyAI : MonoBehaviour
 
         // initializing enemy variables
         agent.speed = baseStats.speed;
+        wanderRNG = new System.Random(seed + 1);
+        SetState(initialState);
     }
-
     protected virtual void Update()
     {
         Think();
     }
+    float viewAngle = 110f;
+    protected Transform[] visiblePlayers;
+    protected Transform[] visibleTraps;
+    protected Transform[] visibleEmployers;
+    protected Vector3 lastPlayerPos;
+    protected virtual void VisionCone()
+    {
+        Transform[] GetTransformsWithinCone(Collider[] colliders)
+        {
+            HashSet<Transform> transformsHash = new HashSet<Transform>(); 
+            foreach (Collider collider in colliders)
+            {
+                Vector3 direction = (collider.transform.position - transform.position).normalized;
+                float angle = Vector3.Angle(transform.forward, direction);
+
+                if (angle > viewAngle / 2f) continue;
+                transformsHash.Add(collider.transform.root);
+            }
+
+            return transformsHash.ToArray(); // fallback
+        }
+        
+        int employerMask = (1 << 9);
+        int playerMask = (1 << 6);
+        int trapMask = (1 << 11);
+        
+        Collider[] employerCollider = Physics.OverlapSphere(transform.position, enemyStats.aggroDistance, employerMask);
+        visibleEmployers = GetTransformsWithinCone(employerCollider);
+        Collider[] playerCollider = Physics.OverlapSphere(transform.position, enemyStats.aggroDistance, playerMask);
+        visiblePlayers = GetTransformsWithinCone(playerCollider);
+        if (visiblePlayers.Length > 0)
+        {
+            lastPlayerPos = visiblePlayers[0].transform.position;
+        }
+        Collider[] trapColliders = Physics.OverlapSphere(transform.position, enemyStats.aggroDistance, trapMask);
+        visibleTraps = GetTransformsWithinCone(trapColliders);
+    }
+    
     public EnemyStates GetState() => currentState;
     public virtual void SetState(EnemyStates enemyState)
     {
-        currentState = enemyState;
 
-        if (prevState != currentState)
+        if (enemyState != currentState)
         {
             // exit the previous state
-            switch(prevState)
+            switch(currentState)
             {
                 case EnemyStates.Idle: ExitIdle(); break;
+                case EnemyStates.Wandering: ExitWandering(); break;
                 case EnemyStates.Searching: ExitSearching(); break;
                 case EnemyStates.Attacking: ExitAttacking(); break;
                 case EnemyStates.Chasing: ExitChasing(); break;
@@ -54,10 +100,13 @@ public abstract class EnemyAI : MonoBehaviour
                 case EnemyStates.GoToPos: ExitGoToPos(); break;
             }
 
+            currentState = enemyState;
+
             // enter the next state
             switch(currentState)
             {
                 case EnemyStates.Idle: EnterIdle(); break;
+                case EnemyStates.Wandering: EnterWandering(); break;
                 case EnemyStates.Searching: EnterSearching(); break;
                 case EnemyStates.Attacking: EnterAttacking(); break;
                 case EnemyStates.Chasing: EnterChasing(); break;
@@ -65,8 +114,6 @@ public abstract class EnemyAI : MonoBehaviour
                 case EnemyStates.Frantic: EnterFrantic(); break;
                 case EnemyStates.GoToPos: EnterGoToPos(); break;
             }
-
-            prevState = currentState;
         }
     }
     // When in the GoToPos state, this value determines where it will go. 
@@ -79,10 +126,12 @@ public abstract class EnemyAI : MonoBehaviour
     {
         // The AI is thinking, pretty easy to understand. 
         // do not override in most cases
+        if (enableVisionCone) VisionCone();
 
         switch(currentState)
         {
             case EnemyStates.Idle: Idle(); break;
+            case EnemyStates.Wandering: Wandering(); break;
             case EnemyStates.Searching: Searching(); break;
             case EnemyStates.Attacking: Attacking(); break;
             case EnemyStates.Chasing: Chasing(); break;
@@ -103,15 +152,76 @@ public abstract class EnemyAI : MonoBehaviour
     public virtual void ExitIdle()
     {
         // do something here?
+        agent.isStopped = false;
+    }
+    // ---------- WANDERING ----------------------
+    public virtual void EnterWandering()
+    {
+        agent.isStopped = false;
+        agent.updateRotation = true;
+        agent.speed = baseStats.speed;
+    }
+    public virtual void Wandering()
+    {
+
+        if (visiblePlayers.Length > 0)
+        {
+            SetState(EnemyStates.Chasing);
+            return;
+        }
+
+        // Add code here for 'hearing gunshots' or stuff
+        
+        if (ReachedDestination())
+        {
+            Collider[] nodes = Physics.OverlapSphere(transform.position, 15f, 1 << 12);
+            if (nodes.Length > 0)
+            {
+                Collider selectedNode = nodes[wanderRNG.Next(0, nodes.Length)];
+                agent.SetDestination(selectedNode.transform.position);
+            } else
+            {
+                Debug.Log("What? No nodes?");
+            } 
+        }
+    }
+    public virtual void ExitWandering()
+    {
+        
     }
     // ---------- SEARCHING ----------------------
+    float searchPeriod = 10f;
+    float startSearch = -999f;
     public virtual void EnterSearching()
     {
-        // do something here?
+        agent.isStopped = false;
+        agent.updateRotation = true;
+        agent.speed = baseStats.speed * baseStats.sprintSpeedMult;
+        if (lastPlayerPos == null) lastPlayerPos = transform.position;
+        agent.SetDestination(lastPlayerPos);
+        startSearch = Time.time;
     }
     public virtual void Searching()
     {
-        // do something here?
+        if (Time.time - startSearch > searchPeriod)
+        {
+            SetState(EnemyStates.Wandering);
+            return;
+        }
+
+        if (ReachedDestination())
+        {
+            Collider[] nodes = Physics.OverlapSphere(transform.position, 15f, 1 << 12);
+            if (nodes.Length > 0)
+            {
+                Collider selectedNode = nodes[wanderRNG.Next(0, nodes.Length)];
+                agent.SetDestination(selectedNode.transform.position);
+            } else
+            {
+                Debug.Log("What? No nodes?");
+            } 
+        }
+        
     }
     public virtual void ExitSearching()
     {
@@ -124,7 +234,19 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public virtual void Chasing()
     {
-        if (agent.enabled) agent.SetDestination(player.transform.position);
+        
+        if (Vector3.Distance(transform.position, player.transform.position) > enemyStats.deaggroDistance
+        && visiblePlayers.Length == 0)
+        {
+            SetState(EnemyStates.Searching);
+            return;
+        } else if (Vector3.Distance(transform.position, player.transform.position) <= enemyStats.startAttackDist)
+        {
+            SetState(EnemyStates.Attacking);
+            return;
+        }
+
+        agent.SetDestination(player.transform.position);
     }
     public virtual void ExitChasing()
     {
@@ -134,12 +256,23 @@ public abstract class EnemyAI : MonoBehaviour
     public virtual void EnterAttacking()
     {
         // i will not bother with ts yet. 
+        agent.isStopped = true;
     }
     public virtual void Attacking()
     {
-        Debug.Log(gameObject.name+" just attacked!");
+        // Add code for attacking eventually lol.
+        if (Vector3.Distance(transform.position, player.transform.position) > enemyStats.startAttackDist + 0.5f)
+        {
+            SetState(EnemyStates.Chasing);
+            return;
+        }
+        RotateManually(player.transform.position);
     }
-    public virtual void ExitAttacking() {}
+    public virtual void ExitAttacking()
+    {
+        agent.updateRotation = true;
+        agent.isStopped = false;
+    }
     // ---------- FOLLOWING ----------------------
     public virtual void EnterFollowing()
     {
@@ -245,6 +378,7 @@ public abstract class EnemyAI : MonoBehaviour
             rotationSpeed * Time.deltaTime
         );
     }
+    
 
 
 
@@ -253,6 +387,7 @@ public abstract class EnemyAI : MonoBehaviour
 public enum EnemyStates
 {
     Idle,
+    Wandering,
     Searching, 
     Chasing,
     Attacking,
