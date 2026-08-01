@@ -32,6 +32,7 @@ public class EmployerAI : EnemyAI
         agent.speed = baseStats.speed * baseStats.sprintSpeedMult;
         // Transform objective = objectives[objectiveIndex];
         // agent.SetDestination(objective.position + objective.forward * 1.2f); 
+        
     }
     public override void Chasing()
     {

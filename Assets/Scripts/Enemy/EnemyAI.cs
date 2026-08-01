@@ -179,6 +179,7 @@ public abstract class EnemyAI : MonoBehaviour
             if (nodes.Length > 0)
             {
                 Collider selectedNode = nodes[wanderRNG.Next(0, nodes.Length)];
+                
                 agent.SetDestination(selectedNode.transform.position);
             } else
             {
