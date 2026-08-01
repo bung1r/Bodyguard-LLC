@@ -11,5 +11,5 @@ public class Prop : ScriptableObject
     public float minDamageVelocity;
     public float damageVelocityMultiplier;
     public DamageType damageType;
-    public float durability;    
+    public float durability;
 }
