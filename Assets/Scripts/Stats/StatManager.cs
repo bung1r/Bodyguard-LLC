@@ -19,7 +19,7 @@ public class StatManager : MonoBehaviour, IDamageable
 
     public void TakeDamage(DamageData damageData)
     {
-        Debug.Log(gameObject.name + " took " + damageData.damageAmount + " " + damageData.damageType + " damage from " + damageData.source.name);
+        // Debug.Log(gameObject.name + " took " + damageData.damageAmount + " " + damageData.damageType + " damage from " + damageData.source.name);
         runtimeStats.runtimeBaseStats.currentHealth -= damageData.damageAmount;
         if (runtimeStats.runtimeBaseStats.currentHealth <= 0)
         {

@@ -77,5 +77,10 @@ public class EmployerAI : EnemyAI
         agent.updateRotation = true;
         agent.isStopped = false;
     }
+    // ------- SETTERS --------------
+    public void SetStartedWork(float value) => startedWork = value;
+    // ------- GETTERS --------------
+    public float GetStartedWork() => startedWork;
+
 }
 

@@ -12,6 +12,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected RuntimeStats runtimeStats;
     protected RuntimeBaseStats baseStats;
     protected RuntimeEnemyStats enemyStats;
+    public GameObject prefab;
     public GameObject bulletPrefab;
     public EnemyStates initialState = EnemyStates.Wandering;
     [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
@@ -19,7 +20,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected bool enableVisionCone = true;
 
     public int seed = 1_000_000;
-    System.Random wanderRNG;
+    GameRandom wanderRNG;
     
     protected virtual void Start()
     {
@@ -37,7 +38,7 @@ public abstract class EnemyAI : MonoBehaviour
 
         // initializing enemy variables
         agent.speed = baseStats.speed;
-        wanderRNG = new System.Random(seed + 1);
+        wanderRNG = new GameRandom(seed + 1);
         SetState(initialState);
     }
     protected virtual void Update()
@@ -118,6 +119,11 @@ public abstract class EnemyAI : MonoBehaviour
         }
     }
     // When in the GoToPos state, this value determines where it will go. 
+    public void SetStateDirect(EnemyStates enemyState) // NICHE!! Will not activate enter or exit methods. 
+    {
+        currentState = enemyState;
+    }
+    
     public void SetGoToPosPosition(Vector3 position)
     {
         goToPosPosition = position;
@@ -437,27 +443,42 @@ public abstract class EnemyAI : MonoBehaviour
     public void EnemyDeath()
     {
         //stop ai logic
-        enabled = false;
+        // enabled = false;
 
-        //stop movement
-        if (agent != null)
-        {
-            agent.isStopped = true;
-            agent.enabled = false;
-        }
+        // //stop movement
+        // if (agent != null)
+        // {
+        //     agent.isStopped = true;
+        //     agent.enabled = false;
+        // }
 
-        //disable collision
-        Collider collider = GetComponent<Collider>();
-        if (collider != null)
-        {
-            collider.enabled = false;
-        }
+        // //disable collision
+        // Collider collider = GetComponent<Collider>();
+        // if (collider != null)
+        // {
+        //     collider.enabled = false;
+        // }
 
         //play blood spatter or death animation here
 
-        Destroy(gameObject, 0.0f);
+        // Destroy(gameObject, 0.0f);
     }
     
+    // ------- SETTERS --------------
+    public void SetWanderRNG(int nextCalls)
+    {
+        wanderRNG = new GameRandom(seed + 1);
+        for (int i = 0; i < nextCalls; i++)
+        {
+            wanderRNG.Next();
+        }
+    } 
+    public void SetLastAttacked(float value) => lastAttacked = value;
+    // ------- GETTERS --------------
+    public float GetLastAttacked() => lastAttacked;
+    public EnemyStates GetCurrentState() => currentState;
+    public RuntimeStats GetRuntimeStats() => runtimeStats;
+    public int GetWanderRNGCalls() => wanderRNG.CallsMade;
 
 
 }

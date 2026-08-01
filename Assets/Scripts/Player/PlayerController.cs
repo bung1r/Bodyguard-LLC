@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using System.Collections.Generic;
+using System;
 
 // Enum state is really a mess, I should just remove Sneaking (will refactor later message)
 
@@ -9,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Transform playerCamera;
 
-    enum PlayerMovementState { Running, Sneaking, Airborne, Action, Weapon }
+    [HideInInspector] public enum PlayerMovementState { Running, Sneaking, Airborne, Action, Weapon }
     // Running is basically an idle state as well, as action + weapon should retain sprint speed(?)
     PlayerMovementState movementState; 
 
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private Vector3 moveInput; 
     private Vector3 velocity;
+    private List<Checkpoint> checkpoints = new List<Checkpoint>();
 
     [SerializeField] private float kickForce = 9.0f;
 
@@ -95,10 +98,12 @@ public class PlayerController : MonoBehaviour
     // ACTIONS
 
     //  handles stuff like talking to the employer and doors
+    bool holdingE = false; // fuck ass variable
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
+            holdingE = true;
             int layer = (1 << 9);
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, layer)) 
             {
@@ -115,6 +120,11 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+        }
+
+        if (context.canceled)
+        {
+            holdingE = false;
         }
     }
     public void OnLeftClick(InputAction.CallbackContext context)
@@ -145,6 +155,27 @@ public class PlayerController : MonoBehaviour
     }
     public void OnRightClick(InputAction.CallbackContext context)
     {
+        
+        // set a checkpoint!
+        if (context.performed)
+        {
+            if (!holdingE)
+            {
+                Debug.Log("The Player has made a checkpoint");
+                checkpoints.Add(new Checkpoint());
+
+            } else
+            {
+                Debug.Log(checkpoints.Count);
+                // recall to the last checkpoint
+                if (checkpoints.Count > 0)
+                {
+                    Debug.Log("The Player has recalled to the last checkpoint");
+                    Checkpoint checkpoint = checkpoints[checkpoints.Count - 1];
+                    checkpoint.ReturnByDeath(); // revert everything to a previous state
+                }
+            }
+        }
         
     }
     // Kick input/check logic
@@ -262,4 +293,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    // ----------- SETTERS -----------------
+    public void SetPlayerMovementState(PlayerMovementState state) => movementState = state;
+    // ----------- GETTERS -----------------
+    public PlayerMovementState GetPlayerMovementState() => movementState;
 }
