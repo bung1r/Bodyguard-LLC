@@ -32,9 +32,13 @@ public class StatManager : MonoBehaviour, IDamageable
     public void Die(DamageData damageData)
     {
         // Debug.Log(gameObject.name + " died from " + damageData.source.name);
-        
-        // Destroy(gameObject, 1f);
-        // Handle death here (e.g., play animation, disable character, etc.)
+        EnemyAI ai = GetComponent<EnemyAI>();
+        if (ai != null)
+        {
+            ai.EnemyDeath(); // Call the enemy death method
+        }
+
+        // Handle death in enemyai script (e.g., play animation, disable character, etc.)
     }
 
 

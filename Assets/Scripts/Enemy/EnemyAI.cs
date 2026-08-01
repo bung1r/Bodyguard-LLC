@@ -433,6 +433,29 @@ public abstract class EnemyAI : MonoBehaviour
 
         }
     }
+    public void EnemyDeath()
+    {
+        //stop ai logic
+        enabled = false;
+
+        //stop movement
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.enabled = false;
+        }
+
+        //disable collision
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+
+        //play blood spatter or death animation here
+
+        Destroy(gameObject, 1f);
+    }
     
 
 
