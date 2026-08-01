@@ -202,16 +202,25 @@ public class PlayerController : MonoBehaviour
         {
             guntext.SetActive(false);
 
-            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 10.0f, ((1 << 7) | (1 << 8)) ))
+            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 500.0f, ((1 << 7) | (1 << 8)) ))
             {
                 Debug.Log($"hit {hit.collider.gameObject.name} with bullet!");
-                if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
 
-                Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
-                hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * 7.0f, ForceMode.Impulse);
+                if (hit.collider.gameObject.layer == 7)
+                {
+                    StatManager enemyStatManager = hit.collider.gameObject.transform.parent.transform.parent.GetComponent<StatManager>(); // AAUUGHHHGHGHHH
+                    DamageData damageData = new DamageData{source = gameObject, damageType = DamageType.Pierce, damageAmount = 2f};
+                    enemyStatManager.TakeDamage(damageData);
+
+                } else {
+                    if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
+
+                    Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
+                    hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * 7.0f, ForceMode.Impulse);  
+                }
             }
 
-            Invoke(nameof(ResetFromAction), 0.5f);
+            Invoke(nameof(ResetFromAction), 1f);
         }
     }
 

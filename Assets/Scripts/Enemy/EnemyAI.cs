@@ -455,7 +455,7 @@ public abstract class EnemyAI : MonoBehaviour
 
         //play blood spatter or death animation here
 
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 0.0f);
     }
     
 
