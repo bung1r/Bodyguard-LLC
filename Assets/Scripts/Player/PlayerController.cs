@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveInput; 
     private Vector3 velocity;
 
-    [SerializeField] private float kickForce = 7.0f;
+    [SerializeField] private float kickForce = 9.0f;
 
     private Vector3 kickOffset = new Vector3(0,-0.5f,0);
     
@@ -168,9 +168,17 @@ public class PlayerController : MonoBehaviour
     void KickDo()
     {
         int kickLayerMask = (1 << 7) | (1 << 8); //raycast only hits enemies and phys prop layers
-        if(Physics.Raycast(transform.position + kickOffset, playerCamera.transform.forward, out RaycastHit hit, 5.0f, kickLayerMask))
+        if(!Physics.Raycast(transform.position + kickOffset, playerCamera.transform.forward, out RaycastHit hit, 5.0f, kickLayerMask)) {return;}
+        
+        Debug.Log($"hit {hit.collider.gameObject.name} with kick!");
+
+        if (hit.collider.gameObject.layer == 7)
         {
-            Debug.Log($"hit {hit.collider.gameObject.name} with kick!");
+            StatManager enemyStatManager = hit.collider.gameObject.transform.parent.transform.parent.GetComponent<StatManager>(); // AAUUGHHHGHGHHH
+            DamageData damageData = new DamageData{source = gameObject, damageType = DamageType.Blunt, damageAmount = 0.5f};
+            enemyStatManager.TakeDamage(damageData);
+
+        } else {
             if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
 
             Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
@@ -178,13 +186,13 @@ public class PlayerController : MonoBehaviour
             {
                 direction.z = 0.0f;
             }
-            hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * kickForce, ForceMode.Impulse);
+            hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * kickForce, ForceMode.Impulse);   
         }
     }
 
     public void OnShoot(InputAction.CallbackContext context)
     {
-        if (context.performed && inAction == false)
+        if (context.performed && inAction == false) 
         {
             inAction = true;
             guntext.SetActive(true);
