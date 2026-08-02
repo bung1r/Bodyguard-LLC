@@ -34,7 +34,7 @@ public abstract class EnemyAI : MonoBehaviour
 
         // player stuff
         player = FindFirstObjectByType<PlayerController>().transform;
-        Debug.Log(player);
+        // Debug.Log(player);
 
         // initializing enemy variables
         agent.speed = baseStats.speed;
@@ -380,6 +380,7 @@ public abstract class EnemyAI : MonoBehaviour
             return true;
         } 
         return false;
+        
     }
     public void RotateManually(Vector3 targetPos) // sometimes the NavMeshAgent sucks at rotating, use this instead.
     {
@@ -445,19 +446,19 @@ public abstract class EnemyAI : MonoBehaviour
         //stop ai logic
         // enabled = false;
 
-        // //stop movement
-        // if (agent != null)
-        // {
-        //     agent.isStopped = true;
-        //     agent.enabled = false;
-        // }
+        // stop movement
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            // agent.enabled = false;
+        }
 
-        // //disable collision
-        // Collider collider = GetComponent<Collider>();
-        // if (collider != null)
-        // {
-        //     collider.enabled = false;
-        // }
+        //disable collision
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
 
         //play blood spatter or death animation here
 

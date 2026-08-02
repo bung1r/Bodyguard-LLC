@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviour
 
             } else
             {
-                Debug.Log(checkpoints.Count);
+                // Debug.Log(checkpoints.Count);
                 // recall to the last checkpoint
                 if (checkpoints.Count > 0)
                 {

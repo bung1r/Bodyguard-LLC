@@ -10,8 +10,8 @@ public class SniperAI : EnemyAI
 {
     public override void Idle()
     {
-        Debug.Log(visibleEmployers);
-        Debug.Log(visiblePlayers);
+        // Debug.Log(visibleEmployers);
+        // Debug.Log(visiblePlayers);
         if (visibleEmployers.Length > 0 || visiblePlayers.Length > 0)
         {
             Debug.Log("I do be seein players");

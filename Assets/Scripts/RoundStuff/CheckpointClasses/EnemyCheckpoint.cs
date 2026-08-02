@@ -43,15 +43,19 @@ public class EnemyCheckpoint : ICheckpointBase
         enemyAI.SetWanderRNG(wanderRNGNext);
 
         NavMeshAgent agent = enemyRef.GetComponent<NavMeshAgent>();
-        agent.Warp(position);
-        agent.ResetPath();
-        agent.SetDestination(destination);
-        agent.speed = speed;
-        agent.isStopped = isStopped;
-        agent.updateRotation = false;
-        enemyRef.transform.rotation = rotation;
-        agent.updateRotation = updateRotation;
-        agent.velocity = velocity;
+        if (agent.enabled)
+        {
+            agent.Warp(position);
+            agent.ResetPath();
+            agent.SetDestination(destination);
+            agent.speed = speed;
+            agent.isStopped = isStopped;
+            agent.updateRotation = false;
+            enemyRef.transform.rotation = rotation;
+            agent.updateRotation = updateRotation;
+            agent.velocity = velocity;
+        }
+        
 
         enemyAI.GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
     }
