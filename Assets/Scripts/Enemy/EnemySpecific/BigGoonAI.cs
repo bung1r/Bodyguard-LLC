@@ -14,7 +14,6 @@ using UnityEngine.LowLevelPhysics2D;
 public class BigGoonAI : EnemyAI
 {
     protected float maxRushDistance = 10f;
-    protected HashSet<Transform> hitHash = new HashSet<Transform>();
     public override void Chasing()
     {
         base.Chasing();

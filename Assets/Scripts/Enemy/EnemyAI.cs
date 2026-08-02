@@ -17,6 +17,7 @@ public abstract class EnemyAI : MonoBehaviour
     public EnemyStates initialState = EnemyStates.Wandering;
     [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
     protected Vector3 goToPosPosition;
+    protected HashSet<Transform> hitHash = new HashSet<Transform>();
     protected bool enableVisionCone = true;
 
     public int seed = 1_000_000;

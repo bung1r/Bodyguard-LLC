@@ -18,7 +18,7 @@ public class Checkpoint // big chud saving checkpoint
     public Checkpoint()
     {
         timeSaved = Time.time;
-        TempRoundManager roundManager = TempRoundManager.Instance;
+        RoundManager roundManager = RoundManager.Instance;
         foreach (EnemyAI enemyAI in roundManager.enemies)
         {
             // Debug.Log(enemyAI);
@@ -26,7 +26,7 @@ public class Checkpoint // big chud saving checkpoint
             // Debug.Log(enemyCheckpoint);
             enemyCheckpoints.Add(enemyCheckpoint);
         }
-        mapCheckpoint = new MapCheckpoint(); 
+        mapCheckpoint = new MapCheckpoint(roundManager); 
         playerCheckpoint = new PlayerCheckpoint(roundManager.player);
         employerCheckpoint = new EmployerCheckpoint(roundManager.employer);
     }

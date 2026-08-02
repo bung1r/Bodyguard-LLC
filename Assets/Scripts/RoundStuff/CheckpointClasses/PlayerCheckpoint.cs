@@ -9,6 +9,8 @@ public class PlayerCheckpoint : ICheckpointBase
     Quaternion rotation;
     PlayerController.PlayerMovementState movementState;
     float currentHP;
+    bool isGrabbing;
+    bool inAction;
     // put more stats like ammo and holding and I DON'T KNOW OK???
     
     public void ReturnByDeath(float timeSaved)
@@ -19,8 +21,15 @@ public class PlayerCheckpoint : ICheckpointBase
         playerRef.transform.position = position;
         playerRef.transform.rotation = rotation;
         playerRef.GetComponent<CharacterController>().enabled = true;
-        playerRef.GetComponent<PlayerController>().SetPlayerMovementState(movementState);
+        
+        PlayerController playerController =  playerRef.GetComponent<PlayerController>();
+        playerController.SetPlayerMovementState(movementState);
+        playerController.SetInAction(inAction);
+        playerController.SetIsGrabbing(isGrabbing);
+
         playerRef.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
+
+
     }
     public PlayerCheckpoint(PlayerController player)
     {
@@ -31,7 +40,7 @@ public class PlayerCheckpoint : ICheckpointBase
 
         // this is very fun!
         currentHP = player.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth;
-        
-
+        isGrabbing = player.GetIsGrabbing();
+        inAction = player.GetInAction();
     }
 }

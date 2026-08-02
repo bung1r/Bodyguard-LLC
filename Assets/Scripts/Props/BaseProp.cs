@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BaseProp : MonoBehaviour
 {
+    public GameObject prefab;
     private Rigidbody propBody;
     public Prop propProperties;
     private Transform cameraTransform = null;
@@ -80,4 +81,12 @@ public class BaseProp : MonoBehaviour
     {
         Destroy(gameObject, 0.5f);
     }
+
+    // ---- GETTERS --------
+    public float GetDurability() => currentDurability;
+    public bool GetIsGrabbed() => isGrabbed;
+    // ---- SETTERS --------
+    public void SetDurability(float value) => currentDurability = value;
+    public void SetIsGrabbed(bool value) => isGrabbed = value;
+
 }

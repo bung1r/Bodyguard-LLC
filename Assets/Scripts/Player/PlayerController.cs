@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 // Enum state is really a mess, I should just remove Sneaking (will refactor later message)
 
@@ -316,6 +317,10 @@ public class PlayerController : MonoBehaviour
     }
     // ----------- SETTERS -----------------
     public void SetPlayerMovementState(PlayerMovementState state) => movementState = state;
+    public void SetInAction(bool value) => inAction = value;
+    public void SetIsGrabbing(bool value) => isGrabbing = value;
     // ----------- GETTERS -----------------
     public PlayerMovementState GetPlayerMovementState() => movementState;
+    public bool GetInAction() => inAction;
+    public bool GetIsGrabbing() => isGrabbing;
 }

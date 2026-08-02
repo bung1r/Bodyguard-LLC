@@ -34,7 +34,7 @@ public class EnemyCheckpoint : ICheckpointBase
         // recreate the enemy reference if it was destroyed after the checkpoint was made
         if (enemyRef == null)
         {
-            enemyRef = TempRoundManager.Instantiate(enemyPrefab);
+            enemyRef = RoundManager.Instantiate(enemyPrefab);
         }
 
         EnemyAI enemyAI = enemyRef.GetComponent<EnemyAI>();
