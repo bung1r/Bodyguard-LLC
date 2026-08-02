@@ -11,11 +11,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Transform playerCamera;
 
-    [HideInInspector] public enum PlayerMovementState { Running, Sneaking, Airborne, Action, Weapon }
+    [HideInInspector] public enum PlayerMovementState { Running, Sneaking, Airborne }
     // Running is basically an idle state as well, as action + weapon should retain sprint speed(?)
     PlayerMovementState movementState; 
 
     private bool inAction;
+    private bool inGun;
+    private bool isGrabbing;
 
     [SerializeField] private float jumpHeight = 0.65f;
     [SerializeField] private float gravity = -9.8f;
@@ -135,6 +137,21 @@ public class PlayerController : MonoBehaviour
 
             // Shooting should take priority, probably.
 
+            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit grabHit, 4.5f, (1 << 8)))
+            {
+                if (isGrabbing)
+                {
+                    inAction = false;
+                    isGrabbing = false;
+                    grabHit.collider.gameObject.GetComponent<BaseProp>().EndGrab();
+                } else if (!inAction)
+                {
+                    inAction = true;
+                    isGrabbing = true;
+                    grabHit.collider.gameObject.GetComponent<BaseProp>().StartGrab(playerCamera.transform);   
+                }
+            }
+
             if (employer.GetState() == EnemyStates.Following)
             {
                 if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, (1 << 10))
@@ -226,10 +243,11 @@ public class PlayerController : MonoBehaviour
         if (context.performed && inAction == false) 
         {
             inAction = true;
+            inGun = true;
             guntext.SetActive(true);
         }
 
-        if (context.canceled && inAction == true)
+        if (context.canceled && inAction == true && inGun == true)
         {
             guntext.SetActive(false);
 
@@ -247,9 +265,12 @@ public class PlayerController : MonoBehaviour
                     if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
 
                     Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
-                    hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * 7.0f, ForceMode.Impulse);  
+                    hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * 7.0f, ForceMode.Impulse);
+                    hit.collider.gameObject.GetComponent<BaseProp>().TakeDamage(new DamageData{source = gameObject, damageType = DamageType.Bullet, damageAmount = 2f});
                 }
             }
+
+            inGun = false;
 
             Invoke(nameof(ResetFromAction), 1f);
         }

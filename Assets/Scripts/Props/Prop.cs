@@ -12,4 +12,7 @@ public class Prop : ScriptableObject
     public float damageVelocityMultiplier;
     public DamageType damageType;
     public float durability;
+
+    [Space(3f)]
+    public Vector3 grabOffset;
 }

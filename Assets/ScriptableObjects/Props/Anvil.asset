@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de385bac3dde5ed49aa7a65d4080a95f, type: 3}
-  m_Name: SmallCrate
+  m_Name: Anvil
   m_EditorClassIdentifier: Assembly-CSharp::Prop
   physicsProp: 1
   activatable: 0
-  minDamageVelocity: 1.7
-  damageVelocityMultiplier: 1
+  minDamageVelocity: 0.5
+  damageVelocityMultiplier: 3.5
   damageType: 0
-  durability: 3
-  grabOffset: {x: 0, y: 0, z: 2.2}
+  durability: 7
+  grabOffset: {x: 0, y: 0, z: 1.7}

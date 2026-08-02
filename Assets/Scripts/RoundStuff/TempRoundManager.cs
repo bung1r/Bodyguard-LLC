@@ -29,7 +29,7 @@ public class TempRoundManager : MonoBehaviour
 
     public static GameObject Instantiate(GameObject gameObject)
     {
-        return Instantiate(gameObject);
+        return Instantiate(gameObject); 
     }
     
     
