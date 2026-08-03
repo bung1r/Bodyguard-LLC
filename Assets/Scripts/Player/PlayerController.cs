@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] Transform playerCamera;
+    [SerializeField] private TMP_Text ammoCounter;
+    private int ammoCount = 6;
 
     [HideInInspector] public enum PlayerMovementState { Running, Sneaking, Airborne }
     // Running is basically an idle state as well, as action + weapon should retain sprint speed(?)
@@ -58,6 +60,8 @@ public class PlayerController : MonoBehaviour
 
         movementState = PlayerMovementState.Running;
         speed = baseStats.speed * baseStats.sprintSpeedMult;
+
+        ammoCounter.text = "Ammo: " + ammoCount;
 
         inAction = false;
     }
@@ -137,6 +141,16 @@ public class PlayerController : MonoBehaviour
             // a bunch of stuff, 'innit?
 
             // Shooting should take priority, probably.
+            if (ammoCount > 0)
+            {
+                ammoCount--;
+                ammoCounter.text = "Ammo: " + ammoCount;
+            }
+            else
+            {
+                Debug.Log("thumbclair please give me more ammo");
+                return;
+            }
 
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit grabHit, 4.5f, (1 << 8)))
             {
