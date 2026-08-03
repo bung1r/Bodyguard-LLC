@@ -26,8 +26,22 @@ public class BaseProp : MonoBehaviour
         if (isGrabbed == true)
         {
             Vector3 targetPos = cameraTransform.position + (cameraTransform.rotation * propProperties.grabOffset);
-            transform.position = targetPos;
-            transform.rotation = cameraTransform.rotation;
+            // transform.position = targetPos;
+            if (Vector3.Distance(targetPos,transform.position) > 0.15f)
+            {
+                Vector3 moveDirection = (targetPos - transform.position);
+
+                float targetSpeed = Mathf.Min(propProperties.maxSpeed, moveDirection.magnitude * propProperties.grabForce);
+                Vector3 desiredVelocity = moveDirection.normalized * targetSpeed;
+
+                Vector3 velocityChange = Vector3.ClampMagnitude(desiredVelocity - propBody.linearVelocity, 200.0f);
+                
+                Debug.Log($"TargetSpeed = {targetSpeed}, VelocityChange = {velocityChange}");
+                propBody.AddForce(velocityChange, ForceMode.Acceleration);
+            } else
+            {
+                propBody.linearVelocity = Vector3.zero;
+            }
         }
         hitTimer += Time.deltaTime;
     }
@@ -58,12 +72,16 @@ public class BaseProp : MonoBehaviour
     public virtual void StartGrab(Transform cameraTransform)
     {
         isGrabbed = true;
+        propBody.useGravity = false;
+        propBody.constraints = RigidbodyConstraints.FreezeRotation;
         if (this.cameraTransform == null) {this.cameraTransform = cameraTransform;}
     }
 
     public virtual void EndGrab()
     {
         isGrabbed = false;
+        propBody.constraints = RigidbodyConstraints.None;
+        propBody.useGravity = true;
     }
 
 

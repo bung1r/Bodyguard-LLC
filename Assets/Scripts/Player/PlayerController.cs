@@ -140,18 +140,6 @@ public class PlayerController : MonoBehaviour
         {
             // a bunch of stuff, 'innit?
 
-            // Shooting should take priority, probably.
-            if (ammoCount > 0)
-            {
-                ammoCount--;
-                ammoCounter.text = "Ammo: " + ammoCount;
-            }
-            else
-            {
-                Debug.Log("thumbclair please give me more ammo");
-                return;
-            }
-
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit grabHit, 4.5f, (1 << 8)))
             {
                 if (isGrabbing)
@@ -285,6 +273,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            // Shooting should take priority, probably.
+            if (ammoCount > 0)
+            {
+                ammoCount--;
+                ammoCounter.text = "Ammo: " + ammoCount;
+            }
+            else
+            {
+                Debug.Log("thumbclair please give me more ammo");
+                return;
+            }
+
             inGun = false;
 
             Invoke(nameof(ResetFromAction), 1f);
@@ -306,7 +306,13 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
         controller.Move(move * speed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
+        if (!controller.isGrounded){
+            velocity.y += gravity * Time.deltaTime;
+        } else
+        {
+            velocity.y = 0.0f;
+        }
+
         controller.Move(velocity * Time.deltaTime);
 
         StateCheck();

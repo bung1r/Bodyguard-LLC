@@ -15,4 +15,7 @@ public class Prop : ScriptableObject
 
     [Space(3f)]
     public Vector3 grabOffset;
+    public float grabForce;
+
+    public float maxSpeed;
 }

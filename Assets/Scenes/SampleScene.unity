@@ -657,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerCamera: {fileID: 330585546}
+  ammoCounter: {fileID: 1516208206}
   jumpHeight: 2
   gravity: -9.8
   kickForce: 20
@@ -1939,6 +1940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: 15c242951b486874a8ab335e22c73c7e, type: 2}
 --- !u!208 &537578886
 NavMeshObstacle:
@@ -2982,6 +2984,7 @@ MonoBehaviour:
   props: []
   employer: {fileID: 1090515334}
   player: {fileID: 194695192}
+  roundSeed: 0
 --- !u!4 &922802679
 Transform:
   m_ObjectHideFlags: 0
@@ -4742,6 +4745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: 2adeee0a1e15acb4a9e4c42c1d1c9257, type: 2}
 --- !u!54 &1544165054
 Rigidbody:
@@ -5925,6 +5929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: 2adeee0a1e15acb4a9e4c42c1d1c9257, type: 2}
 --- !u!54 &1935824414
 Rigidbody:
@@ -6208,6 +6213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: c14030200a0bb494c983d97be6570d78, type: 2}
 --- !u!54 &2033742957
 Rigidbody:

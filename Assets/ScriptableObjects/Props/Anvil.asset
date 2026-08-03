@@ -19,3 +19,4 @@ MonoBehaviour:
   damageType: 0
   durability: 7
   grabOffset: {x: 0, y: 0, z: 1.7}
+  grabForce: 100
