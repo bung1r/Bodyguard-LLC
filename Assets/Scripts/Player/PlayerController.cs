@@ -64,7 +64,9 @@ public class PlayerController : MonoBehaviour
         ammoCounter.text = "Ammo: " + ammoCount;
 
         inAction = false;
-    }
+
+        Invoke(nameof(SetCheckpoint), 0.1f);
+    }  
 
     // MOVEMENT
 
@@ -115,7 +117,7 @@ public class PlayerController : MonoBehaviour
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, layer)) 
             {
                 // check if we got the employer 
-                Debug.Log("Interacted with the employer");
+                // Debug.Log("Interacted with the employer");
                 if (hit.transform.root.TryGetComponent<EmployerAI>(out var employerAI))
                 {
                     if (employerAI.GetState() == EnemyStates.Following)
@@ -193,19 +195,14 @@ public class PlayerController : MonoBehaviour
         {
             if (!holdingE)
             {
-                Debug.Log("The Player has made a checkpoint");
+                Debug.Log("Checkpoint Created");
                 checkpoints.Add(new Checkpoint());
 
             } else
             {
                 // Debug.Log(checkpoints.Count);
                 // recall to the last checkpoint
-                if (checkpoints.Count > 0)
-                {
-                    Debug.Log("The Player has recalled to the last checkpoint");
-                    Checkpoint checkpoint = checkpoints[checkpoints.Count - 1];
-                    checkpoint.ReturnByDeath(); // revert everything to a previous state
-                }
+                ReturnByDeath();
             }
         }
         
@@ -327,6 +324,19 @@ public class PlayerController : MonoBehaviour
                 movementState = PlayerMovementState.Running;
                 speed = baseStats.speed * baseStats.sprintSpeedMult;
             }
+        }
+    }
+    public void SetCheckpoint()
+    {
+        checkpoints.Add(new Checkpoint());
+    }
+    public void ReturnByDeath()
+    {
+        if (checkpoints.Count > 0)
+        {
+            Debug.Log("Return By Death has triggered.");
+            Checkpoint checkpoint = checkpoints[checkpoints.Count - 1];
+            checkpoint.ReturnByDeath(); // revert everything to a previous state
         }
     }
     // ----------- SETTERS -----------------

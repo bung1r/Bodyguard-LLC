@@ -12,6 +12,7 @@ public class EnemyCheckpoint : ICheckpointBase
     // EnemyAI Variables
     protected EnemyStates currentState;
     protected float lastAttacked; 
+    protected float lastStunned;
 
     // Nav Mesh Variables
     protected Vector3 destination;
@@ -39,6 +40,7 @@ public class EnemyCheckpoint : ICheckpointBase
 
         EnemyAI enemyAI = enemyRef.GetComponent<EnemyAI>();
         enemyAI.SetLastAttacked(lastAttacked + timeDifference);
+        enemyAI.SetLastStunned(lastStunned + timeDifference);
         enemyAI.SetStateDirect(currentState);
         enemyAI.SetWanderRNG(wanderRNGNext);
 
@@ -80,6 +82,6 @@ public class EnemyCheckpoint : ICheckpointBase
 
         currentHP = enemyAI.GetRuntimeStats().GetBaseStats().currentHealth;
         lastAttacked = enemyAI.GetLastAttacked();
-        
+        lastStunned = enemyAI.GetLastStunned();
     }
 }

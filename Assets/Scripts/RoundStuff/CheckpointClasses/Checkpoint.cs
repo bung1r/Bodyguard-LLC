@@ -7,6 +7,7 @@ public class Checkpoint // big chud saving checkpoint
     MapCheckpoint mapCheckpoint; // map differences (broken stuff, moved boxes, traps, etc.)
     PlayerCheckpoint playerCheckpoint; // stats about the player specifcially
     EmployerCheckpoint employerCheckpoint; // stats about the employer specifically
+    RoundCheckpoint roundCheckpoint;
     float timeSaved;
     public void ReturnByDeath()
     {
@@ -14,6 +15,7 @@ public class Checkpoint // big chud saving checkpoint
         mapCheckpoint.ReturnByDeath(timeSaved);
         playerCheckpoint.ReturnByDeath(timeSaved);
         employerCheckpoint.ReturnByDeath(timeSaved);
+        roundCheckpoint.ReturnByDeath(timeSaved);
     }
     public Checkpoint()
     {
@@ -29,5 +31,6 @@ public class Checkpoint // big chud saving checkpoint
         mapCheckpoint = new MapCheckpoint(roundManager); 
         playerCheckpoint = new PlayerCheckpoint(roundManager.player);
         employerCheckpoint = new EmployerCheckpoint(roundManager.employer);
+        roundCheckpoint = new RoundCheckpoint(roundManager);
     }
 }

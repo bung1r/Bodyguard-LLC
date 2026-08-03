@@ -15,10 +15,12 @@ public abstract class EnemyAI : MonoBehaviour
     public GameObject prefab;
     public GameObject bulletPrefab;
     public EnemyStates initialState = EnemyStates.Wandering;
+    public EnemyStates afterStunState = EnemyStates.Searching;
     [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
     protected Vector3 goToPosPosition;
     protected HashSet<Transform> hitHash = new HashSet<Transform>();
     protected bool enableVisionCone = true;
+    protected float stunTime = 1f;
 
     public int seed = 1_000_000;
     GameRandom wanderRNG;
@@ -371,6 +373,27 @@ public abstract class EnemyAI : MonoBehaviour
     {
         // do something here
     }
+    protected float lastStunned = -999f;
+    public virtual void EnterStunned()
+    {
+        agent.isStopped = true;
+        agent.updateRotation = false;
+        agent.ResetPath();
+        lastStunned = Time.time;
+    }
+    public virtual void Stunned()
+    {
+        if (Time.time - lastStunned > stunTime)
+        {
+            SetState(afterStunState);
+            return;
+        }
+    }
+    public virtual void ExitStunned()
+    {
+        agent.isStopped = false;
+        agent.updateRotation = true;
+    }
     // -------- Helper Methods! Just help for all EnemyAIs, basically -----
     public bool ReachedDestination()
     {
@@ -476,8 +499,10 @@ public abstract class EnemyAI : MonoBehaviour
         }
     } 
     public void SetLastAttacked(float value) => lastAttacked = value;
+    public void SetLastStunned(float value) => lastStunned = value;
     // ------- GETTERS --------------
     public float GetLastAttacked() => lastAttacked;
+    public float GetLastStunned() => lastStunned;
     public EnemyStates GetCurrentState() => currentState;
     public RuntimeStats GetRuntimeStats() => runtimeStats;
     public int GetWanderRNGCalls() => wanderRNG.CallsMade;
@@ -495,5 +520,6 @@ public enum EnemyStates
     Following, 
     Frantic,
     GoToPos,
+    Stunned,
     Dead,
 }

@@ -17,7 +17,7 @@ public class EmployerAI : EnemyAI
 
     // REFACTOR THIS LATER!! I WANT THIS TO BE IN A ROUNDMANAGER, THANKS!
     [SerializeField] private List<Objective> objectives;
-    [SerializeField] private float timePerObjective = 5f;
+    // [SerializeField] private float timePerObjective = 5f;
     private int objectiveIndex = 0;
     
     public override void Start()

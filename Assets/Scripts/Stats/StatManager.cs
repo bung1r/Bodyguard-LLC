@@ -32,10 +32,14 @@ public class StatManager : MonoBehaviour, IDamageable
     public void Die(DamageData damageData)
     {
         // Debug.Log(gameObject.name + " died from " + damageData.source.name);
-        EnemyAI ai = GetComponent<EnemyAI>();
-        if (ai != null)
+    
+        if (TryGetComponent<EnemyAI>(out var ai))
         {
             ai.EnemyDeath(); // Call the enemy death method
+        } else if (TryGetComponent<PlayerController>(out var playerController))
+        {
+            Debug.Log("Return by death??");
+            playerController.ReturnByDeath();
         }
 
         // Handle death in enemyai script (e.g., play animation, disable character, etc.)
