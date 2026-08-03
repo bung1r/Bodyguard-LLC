@@ -23,7 +23,7 @@ public abstract class EnemyAI : MonoBehaviour
     public int seed = 1_000_000;
     GameRandom wanderRNG;
     
-    protected virtual void Start()
+    public virtual void Start()
     {
         // enemy stuff
         statManager = GetComponent<StatManager>();
@@ -376,7 +376,7 @@ public abstract class EnemyAI : MonoBehaviour
     {
         if (!agent.pathPending &&
         agent.remainingDistance <= agent.stoppingDistance &&
-        !agent.hasPath)
+        (!agent.hasPath || agent.velocity.sqrMagnitude == 0f))
         {
             return true;
         } 
@@ -450,16 +450,16 @@ public abstract class EnemyAI : MonoBehaviour
         // stop movement
         if (agent != null)
         {
-            agent.isStopped = true;
+            // agent.isStopped = true;
             // agent.enabled = false;
         }
 
         //disable collision
-        Collider collider = GetComponent<Collider>();
-        if (collider != null)
-        {
-            collider.enabled = false;
-        }
+        // Collider collider = GetComponent<Collider>();
+        // if (collider != null)
+        // {
+        //     collider.enabled = false;
+        // }
 
         //play blood spatter or death animation here
 

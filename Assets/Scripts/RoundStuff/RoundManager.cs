@@ -8,6 +8,7 @@ public class RoundManager : MonoBehaviour
     // for now, manually set these 
     public List<EnemyAI> enemies;
     public List<BaseProp> props;
+    public List<Objective> objectives;
     public EmployerAI employer;
     public PlayerController player;
 

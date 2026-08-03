@@ -141,16 +141,16 @@ public class PlayerController : MonoBehaviour
             // a bunch of stuff, 'innit?
 
             // Shooting should take priority, probably.
-            if (ammoCount > 0)
-            {
-                ammoCount--;
-                ammoCounter.text = "Ammo: " + ammoCount;
-            }
-            else
-            {
-                Debug.Log("thumbclair please give me more ammo");
-                return;
-            }
+            // if (ammoCount > 0)
+            // {
+            //     ammoCount--;
+            //     ammoCounter.text = "Ammo: " + ammoCount;
+            // }
+            // else
+            // {
+            //     Debug.Log("thumbclair please give me more ammo");
+            //     return;
+            // }
 
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit grabHit, 4.5f, (1 << 8)))
             {

@@ -505,6 +505,7 @@ GameObject:
   - component: {fileID: 141763482}
   - component: {fileID: 141763481}
   - component: {fileID: 141763480}
+  - component: {fileID: 141763484}
   m_Layer: 0
   m_Name: Obj5
   m_TagString: Untagged
@@ -606,6 +607,20 @@ Transform:
   - {fileID: 847367898}
   m_Father: {fileID: 65427137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &141763484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141763479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77430fa2bd67d404f9f617ad765e4b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Objective
+  objectiveSO: {fileID: 11400000, guid: 1308408b715c9af44b3919f699b7a948, type: 2}
+  isComplete: 0
 --- !u!1 &194695190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1939,6 +1954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: 15c242951b486874a8ab335e22c73c7e, type: 2}
 --- !u!208 &537578886
 NavMeshObstacle:
@@ -2979,9 +2995,20 @@ MonoBehaviour:
   - {fileID: 1594914794}
   - {fileID: 542327630}
   - {fileID: 1040697737}
-  props: []
+  props:
+  - {fileID: 2033742956}
+  - {fileID: 1544165053}
+  - {fileID: 1935824413}
+  - {fileID: 537578885}
+  objectives:
+  - {fileID: 1807360783}
+  - {fileID: 2086985057}
+  - {fileID: 1838818536}
+  - {fileID: 1183463543}
+  - {fileID: 141763484}
   employer: {fileID: 1090515334}
   player: {fileID: 194695192}
+  roundSeed: 0
 --- !u!4 &922802679
 Transform:
   m_ObjectHideFlags: 0
@@ -3609,6 +3636,7 @@ GameObject:
   - component: {fileID: 1183463542}
   - component: {fileID: 1183463541}
   - component: {fileID: 1183463540}
+  - component: {fileID: 1183463543}
   m_Layer: 0
   m_Name: Obj4
   m_TagString: Untagged
@@ -3710,6 +3738,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183463538}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1183463543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183463538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77430fa2bd67d404f9f617ad765e4b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Objective
+  objectiveSO: {fileID: 11400000, guid: 6fe0bf10cd2ab8b4988e9bf27ed9581d, type: 2}
+  isComplete: 0
 --- !u!1 &1272655751
 GameObject:
   m_ObjectHideFlags: 0
@@ -4742,6 +4784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: 2adeee0a1e15acb4a9e4c42c1d1c9257, type: 2}
 --- !u!54 &1544165054
 Rigidbody:
@@ -5310,6 +5353,7 @@ GameObject:
   - component: {fileID: 1807360782}
   - component: {fileID: 1807360781}
   - component: {fileID: 1807360780}
+  - component: {fileID: 1807360783}
   m_Layer: 0
   m_Name: Obj1
   m_TagString: Untagged
@@ -5411,6 +5455,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807360778}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1807360783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807360778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77430fa2bd67d404f9f617ad765e4b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Objective
+  objectiveSO: {fileID: 11400000, guid: 6fe0bf10cd2ab8b4988e9bf27ed9581d, type: 2}
+  isComplete: 0
 --- !u!1 &1808083368
 GameObject:
   m_ObjectHideFlags: 0
@@ -5647,6 +5705,7 @@ GameObject:
   - component: {fileID: 1838818535}
   - component: {fileID: 1838818534}
   - component: {fileID: 1838818533}
+  - component: {fileID: 1838818536}
   m_Layer: 0
   m_Name: Obj3
   m_TagString: Untagged
@@ -5748,6 +5807,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1838818531}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1838818536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838818531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77430fa2bd67d404f9f617ad765e4b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Objective
+  objectiveSO: {fileID: 11400000, guid: 6fe0bf10cd2ab8b4988e9bf27ed9581d, type: 2}
+  isComplete: 0
 --- !u!1 &1919210020
 GameObject:
   m_ObjectHideFlags: 0
@@ -5925,6 +5998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: 2adeee0a1e15acb4a9e4c42c1d1c9257, type: 2}
 --- !u!54 &1935824414
 Rigidbody:
@@ -6208,6 +6282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d594e8fbe16b0564ebbb8e83d4d9735b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseProp
+  prefab: {fileID: 0}
   propProperties: {fileID: 11400000, guid: c14030200a0bb494c983d97be6570d78, type: 2}
 --- !u!54 &2033742957
 Rigidbody:
@@ -6326,6 +6401,7 @@ GameObject:
   - component: {fileID: 2086985056}
   - component: {fileID: 2086985055}
   - component: {fileID: 2086985054}
+  - component: {fileID: 2086985057}
   m_Layer: 0
   m_Name: Obj2
   m_TagString: Untagged
@@ -6427,6 +6503,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2086985052}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2086985057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086985052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77430fa2bd67d404f9f617ad765e4b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Objective
+  objectiveSO: {fileID: 11400000, guid: 6fe0bf10cd2ab8b4988e9bf27ed9581d, type: 2}
+  isComplete: 0
 --- !u!1 &2094009149
 GameObject:
   m_ObjectHideFlags: 0
