@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 public class RoundManager : MonoBehaviour
@@ -12,6 +13,7 @@ public class RoundManager : MonoBehaviour
     public PlayerController player;
     [HideInInspector] public float roundTime = 0f;
     [SerializeField] private int roundSeed;
+    public static Action OnNextWave;
     private GameRandom enemySpawnRNG;
     private int waveIndex = 0;
     private List<float> waves = new List<float>
@@ -44,14 +46,11 @@ public class RoundManager : MonoBehaviour
 
         if (roundTime > waves[waveIndex])
         {
-            TriggerWave();
+            OnNextWave?.Invoke();
             waveIndex++;
         }
     }
-    public void TriggerWave()
-    {
-        player.SetCheckpoint();
-    }
+   
 
 
     public static GameObject Instantiate(GameObject gameObject)

@@ -24,6 +24,10 @@ public abstract class EnemyAI : MonoBehaviour
 
     public int seed = 1_000_000;
     GameRandom wanderRNG;
+    void Awake()
+    {
+        wanderRNG = new GameRandom(seed + 1);
+    }
     
     public virtual void Start()
     {
@@ -41,7 +45,7 @@ public abstract class EnemyAI : MonoBehaviour
 
         // initializing enemy variables
         agent.speed = baseStats.speed;
-        wanderRNG = new GameRandom(seed + 1);
+        
         SetState(initialState);
     }
     protected virtual void Update()

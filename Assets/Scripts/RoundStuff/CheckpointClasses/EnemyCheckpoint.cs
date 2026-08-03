@@ -28,7 +28,6 @@ public class EnemyCheckpoint : ICheckpointBase
 
     // Stat Manager and other values
     protected float currentHP;
-
     public virtual void ReturnByDeath(float timeSaved)
     {
         float timeDifference = Time.time - timeSaved;
