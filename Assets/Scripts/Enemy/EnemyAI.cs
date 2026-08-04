@@ -15,15 +15,21 @@ public abstract class EnemyAI : MonoBehaviour
     public GameObject prefab;
     public GameObject bulletPrefab;
     public EnemyStates initialState = EnemyStates.Wandering;
+    public EnemyStates afterStunState = EnemyStates.Searching;
     [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
     protected Vector3 goToPosPosition;
     protected HashSet<Transform> hitHash = new HashSet<Transform>();
     protected bool enableVisionCone = true;
+    protected float stunTime = 1f;
 
     public int seed = 1_000_000;
     GameRandom wanderRNG;
+    void Awake()
+    {
+        wanderRNG = new GameRandom(seed + 1);
+    }
     
-    protected virtual void Start()
+    public virtual void Start()
     {
         // enemy stuff
         statManager = GetComponent<StatManager>();
@@ -39,7 +45,7 @@ public abstract class EnemyAI : MonoBehaviour
 
         // initializing enemy variables
         agent.speed = baseStats.speed;
-        wanderRNG = new GameRandom(seed + 1);
+        
         SetState(initialState);
     }
     protected virtual void Update()
@@ -371,12 +377,33 @@ public abstract class EnemyAI : MonoBehaviour
     {
         // do something here
     }
+    protected float lastStunned = -999f;
+    public virtual void EnterStunned()
+    {
+        agent.isStopped = true;
+        agent.updateRotation = false;
+        agent.ResetPath();
+        lastStunned = Time.time;
+    }
+    public virtual void Stunned()
+    {
+        if (Time.time - lastStunned > stunTime)
+        {
+            SetState(afterStunState);
+            return;
+        }
+    }
+    public virtual void ExitStunned()
+    {
+        agent.isStopped = false;
+        agent.updateRotation = true;
+    }
     // -------- Helper Methods! Just help for all EnemyAIs, basically -----
     public bool ReachedDestination()
     {
         if (!agent.pathPending &&
         agent.remainingDistance <= agent.stoppingDistance &&
-        !agent.hasPath)
+        (!agent.hasPath || agent.velocity.sqrMagnitude == 0f))
         {
             return true;
         } 
@@ -450,16 +477,16 @@ public abstract class EnemyAI : MonoBehaviour
         // stop movement
         if (agent != null)
         {
-            agent.isStopped = true;
+            // agent.isStopped = true;
             // agent.enabled = false;
         }
 
         //disable collision
-        Collider collider = GetComponent<Collider>();
-        if (collider != null)
-        {
-            collider.enabled = false;
-        }
+        // Collider collider = GetComponent<Collider>();
+        // if (collider != null)
+        // {
+        //     collider.enabled = false;
+        // }
 
         //play blood spatter or death animation here
 
@@ -476,8 +503,10 @@ public abstract class EnemyAI : MonoBehaviour
         }
     } 
     public void SetLastAttacked(float value) => lastAttacked = value;
+    public void SetLastStunned(float value) => lastStunned = value;
     // ------- GETTERS --------------
     public float GetLastAttacked() => lastAttacked;
+    public float GetLastStunned() => lastStunned;
     public EnemyStates GetCurrentState() => currentState;
     public RuntimeStats GetRuntimeStats() => runtimeStats;
     public int GetWanderRNGCalls() => wanderRNG.CallsMade;
@@ -495,5 +524,6 @@ public enum EnemyStates
     Following, 
     Frantic,
     GoToPos,
+    Stunned,
     Dead,
 }

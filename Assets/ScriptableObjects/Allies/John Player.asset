@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66e5c902c9b4f434d90c4fbf31b367e4, type: 3}
   m_Name: John Player
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStats
-  isPlayer: 0
+  isPlayer: 1
   isEnemy: 0
   baseStats:
     maxHealth: 100

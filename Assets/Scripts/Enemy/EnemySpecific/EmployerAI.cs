@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 // This is the AI for the employer 
 // (AKA the guy you need to protect)
@@ -9,17 +10,31 @@ public class EmployerAI : EnemyAI
 {
     // THIS IS THE ENUM GUIDE 
     // Idle = Standing still (just normal i guess) (Base)
-    // Following = Just follow the pljayer (Base)
+    // Following = Just follow the pljayer (Override, only for RotateManually)
     // Chasing = Heading for the next objective position (Override)
     // Searching = Working on an objective  (Override)
     // Frantic = Frantic, run around crazy (Base)
 
     // REFACTOR THIS LATER!! I WANT THIS TO BE IN A ROUNDMANAGER, THANKS!
-    [SerializeField] private List<Transform> objectives = new List<Transform>();
-    [SerializeField] private float timePerObjective = 5f;
+    [SerializeField] private List<Objective> objectives;
+    // [SerializeField] private float timePerObjective = 5f;
     private int objectiveIndex = 0;
     
-
+    public override void Start()
+    {
+        objectives = RoundManager.Instance.objectives;
+        base.Start();
+    }
+    public override void Following()
+    {
+        base.Following();
+        RotateManually(player.transform.position);
+    }
+    public override void ExitFollowing()
+    {
+        base.ExitFollowing();
+        agent.updateRotation = true;
+    }
     public override void EnterChasing()
     {
         if (objectiveIndex >= objectives.Count) // have completed all objectives
@@ -30,14 +45,22 @@ public class EmployerAI : EnemyAI
 
         agent.isStopped = false;
         agent.speed = baseStats.speed * baseStats.sprintSpeedMult;
-        // Transform objective = objectives[objectiveIndex];
-        // agent.SetDestination(objective.position + objective.forward * 1.2f); 
+
+        agent.ResetPath();
         
     }
     public override void Chasing()
     {
-        Transform objective = objectives[objectiveIndex];
-        agent.SetDestination(objective.position + objective.forward * 1.2f); 
+        Objective objective = objectives[objectiveIndex];
+        
+        agent.SetDestination(objective.transform.position + objective.transform.forward * 1.2f); 
+
+        // Debug.Log($"Remaining: {agent.remainingDistance}");
+        // Debug.Log($"Stopping: {agent.stoppingDistance}");
+        // Debug.Log($"HasPath: {agent.hasPath}");
+        // Debug.Log($"Velocity: {agent.velocity.magnitude}");
+        // Debug.Log($"PathStatus: {agent.pathStatus}");
+        
         if (ReachedDestination())
         {
             SetState(EnemyStates.Searching);
@@ -56,6 +79,7 @@ public class EmployerAI : EnemyAI
         startedWork = Time.time;
         agent.isStopped = true;
         agent.speed = 0;
+        objectives[objectiveIndex].SetIsWorking(true); // begin working
     }
     public override void Searching()
     {
@@ -64,13 +88,17 @@ public class EmployerAI : EnemyAI
             SetState(EnemyStates.Idle);
             return;
         }
-        RotateManually(objectives[objectiveIndex].position);
-        if (Time.time - startedWork > timePerObjective)
+
+        RotateManually(objectives[objectiveIndex].transform.position);
+
+        if (objectives[objectiveIndex].GetIsComplete())
         {
-            SetState(EnemyStates.Chasing);
+            objectives[objectiveIndex].SetIsWorking(false);
             objectiveIndex++;
+            SetState(EnemyStates.Chasing);
             return;
         }
+
     }
     public override void ExitSearching()
     {
@@ -79,8 +107,9 @@ public class EmployerAI : EnemyAI
     }
     // ------- SETTERS --------------
     public void SetStartedWork(float value) => startedWork = value;
+    public void SetObjectiveIndex(int value) => objectiveIndex = value;
     // ------- GETTERS --------------
     public float GetStartedWork() => startedWork;
-
+    public int GetObjectiveIndex() => objectiveIndex;
 }
 

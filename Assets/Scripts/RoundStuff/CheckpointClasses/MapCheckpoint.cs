@@ -5,6 +5,7 @@ public class MapCheckpoint : ICheckpointBase
 {
     List<PropCheckpoint> propCheckpoints = new List<PropCheckpoint>();
     List<DoorCheckpoint> doorCheckpoints = new List<DoorCheckpoint>();
+    List<ObjectiveCheckpoint> objectiveCheckpoints = new List<ObjectiveCheckpoint>();
     
     public void ReturnByDeath(float timeSaved)
     {
@@ -12,9 +13,10 @@ public class MapCheckpoint : ICheckpointBase
             propCheckpoint.ReturnByDeath(timeSaved);
         
         foreach (DoorCheckpoint doorCheckpoint in doorCheckpoints)
-        {
             doorCheckpoint.ReturnByDeath(timeSaved);
-        }
+
+        foreach (ObjectiveCheckpoint objectiveCheckpoint in objectiveCheckpoints)
+            objectiveCheckpoint.ReturnByDeath(timeSaved);
     }
     public MapCheckpoint(RoundManager roundManager)
     {
@@ -23,6 +25,9 @@ public class MapCheckpoint : ICheckpointBase
 
         // foreach (Door door in RoundManager.doors) 
         //     doorCheckpoints.Add(new DoorCheckpoint(door));
+
+        foreach (Objective objective in roundManager.objectives)
+            objectiveCheckpoints.Add(new ObjectiveCheckpoint(objective));
 
 
         
