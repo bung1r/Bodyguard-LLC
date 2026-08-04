@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using System;
 using Unity.VisualScripting;
+using System.Collections;
 
 // Enum state is really a mess, I should just remove Sneaking (will refactor later message)
 
@@ -18,6 +19,9 @@ public class PlayerController : MonoBehaviour
     // Running is basically an idle state as well, as action + weapon should retain sprint speed(?)
     PlayerMovementState movementState; 
 
+    private float lastPlacedCheckpoint = -999f;
+    private float lastRecalledCheckpoint = -999f;
+    private int checkpointsLeft = 2;
     private bool inAction;
     private bool inGun;
     private bool isGrabbing;
@@ -42,8 +46,16 @@ public class PlayerController : MonoBehaviour
     public GameObject guntext;
 
     private bool sneakLatch; //stupid fucking variable but its very late rn
+    private TimelineUI timelineUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    public IEnumerator TrySetCheckpoint(bool isFixed)
+    {
+        
+        yield return new WaitForEndOfFrame();
+        SetCheckpoint(isFixed);
+    }
     void Start()
     {
         statManager = GetComponent<StatManager>();
@@ -64,6 +76,18 @@ public class PlayerController : MonoBehaviour
         ammoCounter.text = "Ammo: " + ammoCount;
 
         inAction = false;
+
+        timelineUI = TimelineUI.Instance;
+
+        StartCoroutine(TrySetCheckpoint(true));
+    }  
+    void OnEnable()
+    {
+        RoundManager.OnNextWave += OnNextWave;
+    }
+    void OnDisable()
+    {
+        RoundManager.OnNextWave += OnNextWave;
     }
 
     // MOVEMENT
@@ -115,7 +139,7 @@ public class PlayerController : MonoBehaviour
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 5.0f, layer)) 
             {
                 // check if we got the employer 
-                Debug.Log("Interacted with the employer");
+                // Debug.Log("Interacted with the employer");
                 if (hit.transform.root.TryGetComponent<EmployerAI>(out var employerAI))
                 {
                     if (employerAI.GetState() == EnemyStates.Following)
@@ -179,21 +203,28 @@ public class PlayerController : MonoBehaviour
         // set a checkpoint!
         if (context.performed)
         {
-            if (!holdingE)
+            if (!holdingE && checkpointsLeft >= 1)
             {
-                Debug.Log("The Player has made a checkpoint");
-                checkpoints.Add(new Checkpoint());
+                // lastPlacedCheckpoint = Time.time;
+                checkpointsLeft--;
+                SetCheckpoint();
+            }
 
-            } else
+            if (holdingE)
             {
-                // Debug.Log(checkpoints.Count);
                 // recall to the last checkpoint
-                if (checkpoints.Count > 0)
+                if (Time.time - lastRecalledCheckpoint > 1f || checkpoints.Count == 1)
                 {
-                    Debug.Log("The Player has recalled to the last checkpoint");
-                    Checkpoint checkpoint = checkpoints[checkpoints.Count - 1];
-                    checkpoint.ReturnByDeath(); // revert everything to a previous state
+                    lastRecalledCheckpoint = Time.time;
+                    ReturnByDeath();
+                } else
+                {
+                    checkpoints.RemoveAt(checkpoints.Count - 1);
+                    timelineUI.RemoveLastTick(TimelineTickTypes.FlexibleCheckpoint);
+                    lastRecalledCheckpoint = Time.time;
+                    ReturnByDeath();
                 }
+                
             }
         }
         
@@ -335,12 +366,37 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void SetCheckpoint(bool isFixed=false)
+    {
+        checkpoints.Add(new Checkpoint(isFixed));
+        if (!isFixed)
+        {
+            timelineUI.CreateTick(TimelineTickTypes.FlexibleCheckpoint);
+        }
+    }
+    public void ReturnByDeath()
+    {
+        if (checkpoints.Count > 0)
+        {
+            Debug.Log("Return By Death has triggered.");
+            Checkpoint checkpoint = checkpoints[checkpoints.Count - 1];
+            checkpoint.ReturnByDeath(); // revert everything to a previous state
+        }
+    }
+    public void OnNextWave()
+    {
+        
+    }
     // ----------- SETTERS -----------------
     public void SetPlayerMovementState(PlayerMovementState state) => movementState = state;
     public void SetInAction(bool value) => inAction = value;
     public void SetIsGrabbing(bool value) => isGrabbing = value;
+    public void SetLastPlacedCheckpoint(float value) => lastPlacedCheckpoint = value;
+    public void SetCheckpointsLeft(int value) => checkpointsLeft = value;
     // ----------- GETTERS -----------------
     public PlayerMovementState GetPlayerMovementState() => movementState;
     public bool GetInAction() => inAction;
     public bool GetIsGrabbing() => isGrabbing;
+    public float GetLastPlacedCheckpoint() => lastPlacedCheckpoint;
+    public int GetCheckpointsLeft() => checkpointsLeft;
 }

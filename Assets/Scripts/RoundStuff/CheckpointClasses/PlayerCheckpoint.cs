@@ -11,8 +11,10 @@ public class PlayerCheckpoint : ICheckpointBase
     float currentHP;
     bool isGrabbing;
     bool inAction;
+    bool isFixed;
+    int checkpointsLeft;
     // put more stats like ammo and holding and I DON'T KNOW OK???
-    
+
     public void ReturnByDeath(float timeSaved)
     {
         if (playerRef == null) return;
@@ -26,21 +28,27 @@ public class PlayerCheckpoint : ICheckpointBase
         playerController.SetPlayerMovementState(movementState);
         playerController.SetInAction(inAction);
         playerController.SetIsGrabbing(isGrabbing);
-
+        playerController.SetCheckpointsLeft(checkpointsLeft);
+        
         playerRef.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
 
 
     }
-    public PlayerCheckpoint(PlayerController player)
+    public PlayerCheckpoint(PlayerController player, bool isFixed)
     {
         position = player.transform.position;
         rotation = player.transform.rotation;
         movementState = player.GetPlayerMovementState();
         playerRef = player.gameObject;
+        
 
         // this is very fun!
         currentHP = player.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth;
         isGrabbing = player.GetIsGrabbing();
         inAction = player.GetInAction();
+        checkpointsLeft = player.GetCheckpointsLeft();
+
+        this.isFixed = isFixed;
+    
     }
 }
