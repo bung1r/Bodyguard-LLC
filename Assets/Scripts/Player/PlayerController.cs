@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     public GameObject guntext;
 
     private bool sneakLatch; //stupid fucking variable but its very late rn
+    private bool jumpedThisFrame; //SUPER lazy hotfix yo :sob: but i am very tired right now and this deadline fast approaches
     private TimelineUI timelineUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -102,6 +103,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed && (movementState == PlayerMovementState.Running || movementState == PlayerMovementState.Sneaking))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            jumpedThisFrame = true;
         }
     }
 
@@ -339,7 +341,8 @@ public class PlayerController : MonoBehaviour
 
         if (!controller.isGrounded){
             velocity.y += gravity * Time.deltaTime;
-        } else
+            jumpedThisFrame = false;
+        } else if (jumpedThisFrame == false)
         {
             velocity.y = 0.0f;
         }

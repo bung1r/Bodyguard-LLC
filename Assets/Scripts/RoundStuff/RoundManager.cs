@@ -16,10 +16,9 @@ public class RoundManager : MonoBehaviour
     public static Action OnNextWave;
     private GameRandom enemySpawnRNG;
     private int waveIndex = 0;
-    private List<float> waves = new List<float>
-    {
-        20f,40f,60f,80f,
-    };
+    public List<Wave> waves;
+    public GameObject waveManager;
+    private WaveManager waveManagerScript;
     void Awake()
     {
         if (Instance == null)
@@ -36,7 +35,7 @@ public class RoundManager : MonoBehaviour
         player = FindFirstObjectByType<PlayerController>();
 
         enemySpawnRNG = new GameRandom(roundSeed + 1);
-        
+        waveManagerScript = waveManager.GetComponent<WaveManager>();
     }
 
     void Update()
@@ -44,9 +43,12 @@ public class RoundManager : MonoBehaviour
         roundTime += Time.deltaTime;
         Timer.Instance.SetTimer(roundTime);
 
-        if (roundTime > waves[waveIndex])
+        if (waveIndex >= waves.Count) {return;}
+
+        if (roundTime > waves[waveIndex].startTime)
         {
             OnNextWave?.Invoke();
+            waveManagerScript.SpawnWave(waves[waveIndex]);
             waveIndex++;
         }
     }
@@ -57,8 +59,5 @@ public class RoundManager : MonoBehaviour
     {
         return Instantiate(gameObject); 
     }
-
-
-    
     
 }   

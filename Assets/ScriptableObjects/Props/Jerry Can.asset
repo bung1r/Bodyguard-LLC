@@ -18,5 +18,6 @@ MonoBehaviour:
   damageVelocityMultiplier: 0.5
   damageType: 0
   durability: 1
-  grabOffset: {x: 0, y: 0, z: 1.4}
-  grabForce: 20
+  grabOffset: {x: 0, y: 0, z: 2}
+  grabForce: 11
+  maxSpeed: 100
