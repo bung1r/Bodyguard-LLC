@@ -1,0 +1,175 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GoonGuyMask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Body.001
+    m_Weight: 0
+  - m_Path: Bullet.003
+    m_Weight: 0
+  - m_Path: GoonGunRig
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Bullet1
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Bullet2
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Bullet3
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Bullet4
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Bullet5
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Bullet6
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Cylinder.007
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/GoonGun
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Hammer
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Hammer/Cylinder.005
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Reload
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Reload/Clyinder
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Reload/Clyinder/MainClynd.001
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Reload/Cylinder.004
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Reload/PushThingy
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Reload/PushThingy/Thingtopyshout.003
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Trigger
+    m_Weight: 1
+  - m_Path: GoonGunRig/Root/Handle/Trigger/Cylinder.006
+    m_Weight: 1
+  - m_Path: GoonRig
+    m_Weight: 0
+  - m_Path: GoonRig/DEF-spine
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-pelvis.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-pelvis.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-forearm.L.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L/DEF-f_index.01.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L/DEF-f_index.01.L/DEF-f_index.02.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L/DEF-f_index.01.L/DEF-f_index.02.L/DEF-f_index.03.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L/DEF-thumb.01.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L/DEF-thumb.01.L/DEF-thumb.02.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.01.L/DEF-thumb.01.L/DEF-thumb.02.L/DEF-thumb.03.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.02.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.02.L/DEF-f_middle.01.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.02.L/DEF-f_middle.01.L/DEF-f_middle.02.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-forearm.L/DEF-hand.L/DEF-palm.02.L/DEF-f_middle.01.L/DEF-f_middle.02.L/DEF-f_middle.03.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.L/DEF-upper_arm.L/DEF-upper_arm.L.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-forearm.R.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R/DEF-f_index.01.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R/DEF-f_index.01.R/DEF-f_index.02.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R/DEF-f_index.01.R/DEF-f_index.02.R/DEF-f_index.03.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R/DEF-thumb.01.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R/DEF-thumb.01.R/DEF-thumb.02.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.01.R/DEF-thumb.01.R/DEF-thumb.02.R/DEF-thumb.03.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.02.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.02.R/DEF-f_middle.01.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.02.R/DEF-f_middle.01.R/DEF-f_middle.02.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-forearm.R/DEF-hand.R/DEF-palm.02.R/DEF-f_middle.01.R/DEF-f_middle.02.R/DEF-f_middle.03.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-shoulder.R/DEF-upper_arm.R/DEF-upper_arm.R.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/Hat.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-spine.001/DEF-spine.002/DEF-spine.003/DEF-spine.004/DEF-spine.005/DEF-spine.006/Head.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.L/DEF-shin.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.L/DEF-shin.L/DEF-foot.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.L/DEF-shin.L/DEF-foot.L/DEF-toe.L
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.L/DEF-shin.L/DEF-shin.L.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.L/DEF-thigh.L.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.R/DEF-shin.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.R/DEF-shin.R/DEF-foot.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.R/DEF-shin.R/DEF-foot.R/DEF-toe.R
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.R/DEF-shin.R/DEF-shin.R.001
+    m_Weight: 1
+  - m_Path: GoonRig/DEF-spine/DEF-thigh.R/DEF-thigh.R.001
+    m_Weight: 1
