@@ -375,6 +375,9 @@ public class PlayerController : MonoBehaviour
         if (!isFixed)
         {
             timelineUI.CreateTick(TimelineTickTypes.FlexibleCheckpoint);
+        } else
+        {
+            timelineUI.CreateTick(TimelineTickTypes.FixedCheckpoint);
         }
     }
     public void ReturnByDeath()
@@ -384,11 +387,13 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Return By Death has triggered.");
             Checkpoint checkpoint = checkpoints[checkpoints.Count - 1];
             checkpoint.ReturnByDeath(); // revert everything to a previous state
+            
         }
     }
     public void OnNextWave()
     {
-        
+        StartCoroutine(TrySetCheckpoint(true));
+        // we have to wait untilt he next frame because of Start()
     }
     // ----------- SETTERS -----------------
     public void SetPlayerMovementState(PlayerMovementState state) => movementState = state;

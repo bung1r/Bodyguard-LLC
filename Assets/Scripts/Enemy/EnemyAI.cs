@@ -196,7 +196,7 @@ public abstract class EnemyAI : MonoBehaviour
                 agent.SetDestination(selectedNode.transform.position);
             } else
             {
-                Debug.Log("What? No nodes?");
+                // Debug.Log("What? No nodes?");
             } 
         }
     }

@@ -62,16 +62,18 @@ public class TimelineUI : MonoBehaviour
 
     public void CreateTick(TimelineTickTypes type)
     {
-        Color color = new Color32(255, 128, 64, 255);
+        Color color = new Color32(255,255,255,255);
         Image tick = Instantiate(tickModel, mainTimeline.transform);
         tick.rectTransform.localPosition = new Vector3(CalcXOnTimeline(), 0, 0);
         switch(type)
         {
             case TimelineTickTypes.FixedCheckpoint:
+                color = new Color32(120, 120, 120, 255);
                 tick.color = color;
                 checkpointTicks.Add(tick);
                 break;
             case TimelineTickTypes.FlexibleCheckpoint:
+                color = new Color32(255, 235, 30, 255);
                 tick.color = color;
                 checkpointTicks.Add(tick);
                 break;

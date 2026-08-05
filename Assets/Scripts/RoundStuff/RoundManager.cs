@@ -45,10 +45,15 @@ public class RoundManager : MonoBehaviour
 
         if (waveIndex >= waves.Count) {return;}
 
+
+        Debug.Log(roundTime);
+        Debug.Log(waves);
+        Debug.Log(waves[waveIndex]);
+        
         if (roundTime > waves[waveIndex].startTime)
         {
-            OnNextWave?.Invoke();
             waveManagerScript.SpawnWave(waves[waveIndex]);
+            OnNextWave?.Invoke();
             waveIndex++;
         }
     }
