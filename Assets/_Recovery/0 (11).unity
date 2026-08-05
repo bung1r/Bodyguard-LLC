@@ -4023,7 +4023,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmployerAI
   prefab: {fileID: 0}
   bulletPrefab: {fileID: 0}
-  barrel: {fileID: 0}
   initialState: 0
   afterStunState: 2
   currentState: 0

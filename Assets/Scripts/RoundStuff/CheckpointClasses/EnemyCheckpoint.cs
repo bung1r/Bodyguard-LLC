@@ -1,10 +1,11 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyCheckpoint : ICheckpointBase
 {
-    protected GameObject enemyRef;
+    public GameObject enemyRef;
     protected GameObject enemyPrefab;
     protected Vector3 position;
     protected Quaternion rotation;
@@ -13,6 +14,7 @@ public class EnemyCheckpoint : ICheckpointBase
     protected EnemyStates currentState;
     protected float lastAttacked; 
     protected float lastStunned;
+    protected Vector3 lastPlayerPos;
 
     // Nav Mesh Variables
     protected Vector3 destination;
@@ -28,18 +30,24 @@ public class EnemyCheckpoint : ICheckpointBase
 
     // Stat Manager and other values
     protected float currentHP;
+
     public virtual void ReturnByDeath(float timeSaved)
     {
         float timeDifference = Time.time - timeSaved;
         // recreate the enemy reference if it was destroyed after the checkpoint was made
+        
         if (enemyRef == null)
         {
+            
             enemyRef = RoundManager.Instantiate(enemyPrefab);
+            RoundManager.Instance.enemies.Add(enemyRef.GetComponent<EnemyAI>());
         }
 
         EnemyAI enemyAI = enemyRef.GetComponent<EnemyAI>();
+        enemyAI.prefab = enemyPrefab;
         enemyAI.SetLastAttacked(lastAttacked + timeDifference);
         enemyAI.SetLastStunned(lastStunned + timeDifference);
+        enemyAI.SetLastPlayerPos(lastPlayerPos);
         enemyAI.SetStateDirect(currentState);
         enemyAI.SetWanderRNG(wanderRNGNext);
 
@@ -58,7 +66,7 @@ public class EnemyCheckpoint : ICheckpointBase
         }
         
 
-        enemyAI.GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
+        enemyAI.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
     }
     public EnemyCheckpoint(EnemyAI enemyAI)
     {
@@ -82,5 +90,6 @@ public class EnemyCheckpoint : ICheckpointBase
         currentHP = enemyAI.GetRuntimeStats().GetBaseStats().currentHealth;
         lastAttacked = enemyAI.GetLastAttacked();
         lastStunned = enemyAI.GetLastStunned();
+        lastPlayerPos = enemyAI.GetLastPlayerPos();
     }
 }

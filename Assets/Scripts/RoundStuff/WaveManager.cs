@@ -14,7 +14,9 @@ public class WaveManager : MonoBehaviour
             for (int i=0; i < waveSet.spawnAmount; i++)
             {
                 GameObject enemy = Instantiate(waveSet.enemy, waveSet.spawnPosition, Quaternion.identity);
-                roundManager.enemies.Add(enemy.GetComponent<EnemyAI>());
+                EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+                enemyAI.prefab = waveSet.enemy;
+                roundManager.enemies.Add(enemyAI);
             }
         }
     }

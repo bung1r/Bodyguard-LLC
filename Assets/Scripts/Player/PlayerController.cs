@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private RuntimeBaseStats baseStats;
     private RuntimePlayerStats playerStats;
     private CharacterController controller;
+    private RoundManager roundManager;
     private Vector3 moveInput; 
     private Vector3 velocity;
     private List<Checkpoint> checkpoints = new List<Checkpoint>();
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        roundManager = RoundManager.Instance;
         statManager = GetComponent<StatManager>();
         controller = GetComponent<CharacterController>();
         employer = FindFirstObjectByType<EmployerAI>();
@@ -293,10 +295,9 @@ public class PlayerController : MonoBehaviour
 
                 if (hit.collider.gameObject.layer == 7)
                 {
-                    StatManager enemyStatManager = hit.collider.gameObject.transform.parent.transform.parent.GetComponent<StatManager>(); // AAUUGHHHGHGHHH
+                    StatManager enemyStatManager = hit.transform.root.GetComponent<StatManager>(); // AAUUGHHHGHGHHH
                     DamageData damageData = new DamageData{source = gameObject, damageType = DamageType.Pierce, damageAmount = 2f};
                     enemyStatManager.TakeDamage(damageData);
-
                 } else {
                     if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
 
@@ -305,6 +306,8 @@ public class PlayerController : MonoBehaviour
                     hit.collider.gameObject.GetComponent<BaseProp>().TakeDamage(new DamageData{source = gameObject, damageType = DamageType.Bullet, damageAmount = 2f});
                 }
             }
+
+            EmitSound(50f);
 
             // Shooting should take priority, probably.
             if (ammoCount > 0)
@@ -366,9 +369,17 @@ public class PlayerController : MonoBehaviour
             {
                 movementState = PlayerMovementState.Running;
                 speed = baseStats.speed * baseStats.sprintSpeedMult;
+                EmitSound(1f);
             }
         }
     }
+    public void EmitSound(float decibels) {
+        if (roundManager == null) return;
+        if (transform == null) return;
+        roundManager.EmitSound(transform.position, decibels);
+    }
+    
+
     public void SetCheckpoint(bool isFixed=false)
     {
         checkpoints.Add(new Checkpoint(isFixed));

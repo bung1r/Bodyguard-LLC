@@ -44,11 +44,6 @@ public class RoundManager : MonoBehaviour
         Timer.Instance.SetTimer(roundTime);
 
         if (waveIndex >= waves.Count) {return;}
-
-
-        Debug.Log(roundTime);
-        Debug.Log(waves);
-        Debug.Log(waves[waveIndex]);
         
         if (roundTime > waves[waveIndex].startTime)
         {
@@ -57,12 +52,53 @@ public class RoundManager : MonoBehaviour
             waveIndex++;
         }
     }
-   
+    
+    public void EmitSound(Vector3 position, float decibels)
+    {
+        int enemyMask = (1 << 7);
+        Collider[] enemyColliders = Physics.OverlapSphere(position, decibels, enemyMask);
+        HashSet<Transform> enemyHash = new HashSet<Transform>();
+        if (decibels > 10f)
+        {
+            Debug.Log("HELLO???");
+        }
+        foreach (Collider enemy in enemyColliders)
+        {
+            // Debug.Log(enemyColliders.Length);
+            if (enemyHash.Contains(enemy.transform.root)) continue;
 
+            if (enemy.transform.root.TryGetComponent<EnemyAI>(out var ai))
+            {
+                ai.ReceiveSound(position, decibels);
+                enemyHash.Add(enemy.transform.root);
+            }
+        }
+    }
 
+    public void ClearAndDestroyEnemies()
+    {
+        foreach (EnemyAI enemy in enemies)
+        {
+            DestroyImmediate(enemy.gameObject);
+        }
+        enemies.Clear();
+    }
     public static GameObject Instantiate(GameObject gameObject)
     {
-        return Instantiate(gameObject); 
+        if (gameObject == null)
+        {
+            Debug.Log("Attempted to Instantiate a null reference");
+            return gameObject;
+        }
+        GameObject gameObj = UnityEngine.Object.Instantiate(gameObject);
+        return gameObj; 
     }
-    
+    public static void ObjectDestroy(GameObject gameObject)
+    {
+        Destroy(gameObject);
+    }
+    // ------ SETTERS -------
+    public void SetWaveIndex(int value) => waveIndex = value;
+    // ------ GETTERS -------
+    public int GetWaveIndex() => waveIndex;
 }   

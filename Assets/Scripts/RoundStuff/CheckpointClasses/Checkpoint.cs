@@ -12,7 +12,30 @@ public class Checkpoint // big chud saving checkpoint
     bool isFixed; // fixed checkpoint, type shi
     public void ReturnByDeath()
     {
-        foreach (EnemyCheckpoint enemy in enemyCheckpoints) enemy.ReturnByDeath(timeSaved);
+        
+        // RoundManager.Instance.ClearAndDestroyEnemies();
+        List<EnemyAI> tempList = new List<EnemyAI>();
+        foreach (EnemyCheckpoint enemy in enemyCheckpoints)
+        {
+            enemy.ReturnByDeath(timeSaved);
+            tempList.Add(enemy.enemyRef.GetComponent<EnemyAI>());
+        }
+
+        // remove all extra people that may exist. 
+        for (int i = RoundManager.Instance.enemies.Count - 1; i >= 0; i--)
+        {
+            EnemyAI enemyAI = RoundManager.Instance.enemies[i];
+            if (!tempList.Contains(enemyAI))
+            {
+                RoundManager.Instance.enemies.RemoveAt(i);
+
+                if (enemyAI == null || enemyAI.gameObject == null) continue;
+                    
+                RoundManager.ObjectDestroy(enemyAI.gameObject);
+            }
+        }
+        
+
         mapCheckpoint.ReturnByDeath(timeSaved);
         playerCheckpoint.ReturnByDeath(timeSaved);
         employerCheckpoint.ReturnByDeath(timeSaved);

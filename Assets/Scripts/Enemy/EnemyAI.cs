@@ -14,6 +14,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected RuntimeEnemyStats enemyStats;
     public GameObject prefab;
     public GameObject bulletPrefab;
+    public Transform barrel;
     public EnemyStates initialState = EnemyStates.Wandering;
     public EnemyStates afterStunState = EnemyStates.Searching;
     [SerializeField] protected EnemyStates currentState; // ONLY change this. Use SetState()
@@ -27,6 +28,7 @@ public abstract class EnemyAI : MonoBehaviour
     void Awake()
     {
         wanderRNG = new GameRandom(seed + 1);
+
     }
     
     public virtual void Start()
@@ -34,6 +36,7 @@ public abstract class EnemyAI : MonoBehaviour
         // enemy stuff
         statManager = GetComponent<StatManager>();
         agent = GetComponent<NavMeshAgent>();
+        
 
         runtimeStats = statManager.GetRuntimeStats();
         baseStats = runtimeStats.GetBaseStats();
@@ -221,6 +224,12 @@ public abstract class EnemyAI : MonoBehaviour
         if (Time.time - startSearch > searchPeriod)
         {
             SetState(EnemyStates.Wandering);
+            return;
+        }
+
+        if (visiblePlayers.Length > 0)
+        {
+            SetState(EnemyStates.Chasing);
             return;
         }
 
@@ -443,6 +452,7 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public virtual void Attack(DamageData damageData, float spreadAngle) // whatever your attack is 
     {
+        if (barrel == null) return;
         Vector3 target = transform.position;
         if (visibleEmployers.Length > 0)
         {
@@ -451,7 +461,7 @@ public abstract class EnemyAI : MonoBehaviour
         {
             target = visiblePlayers[0].transform.position;
         }
-        Vector3 direction = (target - transform.position).normalized;
+        Vector3 direction = (target - barrel.position).normalized;
         int attackMask = (1 << 3) | (1 << 6) | (1 << 9) | (1 << 10); // obstacles, players, floor
         float yaw = Random.Range(-spreadAngle, spreadAngle);
         float pitch = Random.Range(-spreadAngle, spreadAngle);
@@ -459,9 +469,9 @@ public abstract class EnemyAI : MonoBehaviour
 
         Vector3 finalDirection = spread * direction;
         
-        if(Physics.Raycast(transform.position, finalDirection, out RaycastHit hit, 200f, attackMask))
+        if(Physics.Raycast(barrel.position, finalDirection, out RaycastHit hit, 200f, attackMask))
         {
-            VisualizeBullet(transform.position, hit.point);
+            VisualizeBullet(barrel.position, hit.point);
             if (hit.transform.root.TryGetComponent<StatManager>(out var statManager))
             {
                 statManager.TakeDamage(damageData);
@@ -492,6 +502,22 @@ public abstract class EnemyAI : MonoBehaviour
 
         // Destroy(gameObject, 0.0f);
     }
+    public void ReceiveSound(Vector3 position, float decibels)
+    {
+        if (visiblePlayers == null || visibleEmployers == null) return;
+        Debug.Log(transform.name + " hears the sound of " + decibels.ToString());
+        lastPlayerPos = position;
+
+        if (visiblePlayers.Length == 0 && 
+        visibleEmployers.Length == 0 && 
+        currentState != EnemyStates.Attacking && 
+        currentState != EnemyStates.Chasing)
+        {
+            Debug.Log(transform.name + " hears the sound 2!");
+            SetState(EnemyStates.Searching);
+            return;
+        } 
+    }
     
     // ------- SETTERS --------------
     public void SetWanderRNG(int nextCalls)
@@ -504,12 +530,14 @@ public abstract class EnemyAI : MonoBehaviour
     } 
     public void SetLastAttacked(float value) => lastAttacked = value;
     public void SetLastStunned(float value) => lastStunned = value;
+    public void SetLastPlayerPos(Vector3 value) => lastPlayerPos = value;
     // ------- GETTERS --------------
     public float GetLastAttacked() => lastAttacked;
     public float GetLastStunned() => lastStunned;
     public EnemyStates GetCurrentState() => currentState;
     public RuntimeStats GetRuntimeStats() => runtimeStats;
     public int GetWanderRNGCalls() => wanderRNG.CallsMade;
+    public Vector3 GetLastPlayerPos() => lastPlayerPos;
 
 
 }
