@@ -8,7 +8,9 @@ public class EmployerCheckpoint : EnemyCheckpoint
     {
         base.ReturnByDeath(timeSaved);
         float timeDifference = Time.time - timeSaved;
-        enemyRef.GetComponent<EmployerAI>().SetStartedWork(startedWork + timeDifference);
+        EmployerAI employerAI = enemyRef.GetComponent<EmployerAI>();
+        employerAI.SetStartedWork(startedWork + timeDifference);
+        employerAI.SetObjectiveIndex(objectiveIndex);
     }
     public EmployerCheckpoint(EmployerAI employerAI) : base(employerAI)
     {

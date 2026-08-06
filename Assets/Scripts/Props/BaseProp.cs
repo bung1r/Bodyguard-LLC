@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class BaseProp : MonoBehaviour
 {
-    public GameObject prefab;
     private Rigidbody propBody;
     public Prop propProperties;
     private Transform cameraTransform = null;
@@ -98,6 +97,11 @@ public class BaseProp : MonoBehaviour
     public virtual void DestroyProp()
     {
         Destroy(gameObject, 0.5f);
+    }
+
+    public void OnDestroy()
+    {
+        RoundManager.Instance.props.Remove(this);
     }
 
     // ---- GETTERS --------

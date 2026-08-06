@@ -5,15 +5,19 @@ using UnityEngine;
 public class RoundManager : MonoBehaviour
 {
     public static RoundManager Instance;
+    public static Action OnNextWave;
+    public static Action OnWin;
+    
     // for now, manually set these 
     public List<EnemyAI> enemies;
     public List<BaseProp> props;
     public List<Objective> objectives;
+    [HideInInspector] public int objectivesCompleted;
     public EmployerAI employer;
     public PlayerController player;
+    public float gameDuration; // the duration of the game, put simply
     [HideInInspector] public float roundTime = 0f;
     [SerializeField] private int roundSeed;
-    public static Action OnNextWave;
     private GameRandom enemySpawnRNG;
     private int waveIndex = 0;
     public List<Wave> waves;
@@ -43,6 +47,20 @@ public class RoundManager : MonoBehaviour
         roundTime += Time.deltaTime;
         Timer.Instance.SetTimer(roundTime);
 
+        if (roundTime > gameDuration)
+        {
+            if (objectivesCompleted == objectives.Count && enemies.Count == 0)
+            {
+                // congratulations, you won the game! no enemies, and all objectives complete
+                OnWin?.Invoke();
+                Debug.Log("Congratulations on winning!");
+            } else
+            {
+                // you did not win. Return By Death. You WILL beat it within the time limit
+                player.ReturnByDeath();
+            }
+        }
+
         if (waveIndex >= waves.Count) {return;}
         
         if (roundTime > waves[waveIndex].startTime)
@@ -51,6 +69,11 @@ public class RoundManager : MonoBehaviour
             OnNextWave?.Invoke();
             waveIndex++;
         }
+    }
+
+    public void CompleteObjective(Objective objective)
+    {
+        objectivesCompleted++;
     }
     
     public void EmitSound(Vector3 position, float decibels)
@@ -75,14 +98,6 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-    public void ClearAndDestroyEnemies()
-    {
-        foreach (EnemyAI enemy in enemies)
-        {
-            DestroyImmediate(enemy.gameObject);
-        }
-        enemies.Clear();
-    }
     public static GameObject Instantiate(GameObject gameObject)
     {
         if (gameObject == null)

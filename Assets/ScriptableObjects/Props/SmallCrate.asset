@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de385bac3dde5ed49aa7a65d4080a95f, type: 3}
   m_Name: SmallCrate
   m_EditorClassIdentifier: Assembly-CSharp::Prop
+  prefab: {fileID: 1366644811149401408, guid: 4a52ec9dad20ff74387ab6ba9430a011, type: 3}
   physicsProp: 1
   activatable: 0
   minDamageVelocity: 1.7

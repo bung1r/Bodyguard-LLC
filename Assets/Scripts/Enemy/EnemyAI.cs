@@ -181,7 +181,7 @@ public abstract class EnemyAI : MonoBehaviour
     public virtual void Wandering()
     {
 
-        if (visiblePlayers.Length > 0)
+        if (visiblePlayers.Length > 0 || visibleEmployers.Length > 0)
         {
             SetState(EnemyStates.Chasing);
             return;
@@ -189,9 +189,10 @@ public abstract class EnemyAI : MonoBehaviour
 
         // Add code here for 'hearing gunshots' or stuff
         
-        if (ReachedDestination())
+        if (ReachedDestination(1f))
         {
             Collider[] nodes = Physics.OverlapSphere(transform.position, 15f, 1 << 12);
+            Debug.Log(nodes.Length);
             if (nodes.Length > 0)
             {
                 Collider selectedNode = nodes[wanderRNG.Next(0, nodes.Length)];
@@ -199,7 +200,7 @@ public abstract class EnemyAI : MonoBehaviour
                 agent.SetDestination(selectedNode.transform.position);
             } else
             {
-                // Debug.Log("What? No nodes?");
+                Debug.Log("What? No nodes?");
             } 
         }
     }
@@ -233,7 +234,7 @@ public abstract class EnemyAI : MonoBehaviour
             return;
         }
 
-        if (ReachedDestination())
+        if (ReachedDestination(1f))
         {
             Collider[] nodes = Physics.OverlapSphere(transform.position, 15f, 1 << 12);
             if (nodes.Length > 0)
@@ -258,19 +259,28 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public virtual void Chasing()
     {
-        
-        if (Vector3.Distance(transform.position, player.transform.position) > enemyStats.deaggroDistance
+        // prioritze the employer
+        Vector3 target;
+        if (visibleEmployers.Length > 0)
+        {
+            target = visibleEmployers[0].position;
+        } else
+        {
+            target = player.transform.position;
+        }
+
+        if (Vector3.Distance(transform.position, target) > enemyStats.deaggroDistance
         && visiblePlayers.Length == 0)
         {
             SetState(EnemyStates.Searching);
             return;
-        } else if (Vector3.Distance(transform.position, player.transform.position) <= enemyStats.startAttackDist)
+        } else if (Vector3.Distance(transform.position, target) <= enemyStats.startAttackDist)
         {
             SetState(EnemyStates.Attacking);
             return;
         }
 
-        agent.SetDestination(player.transform.position);
+        agent.SetDestination(target);
     }
     public virtual void ExitChasing()
     {
@@ -286,8 +296,16 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public virtual void Attacking()
     {
-        // Add code for attacking eventually lol.
-        if (Vector3.Distance(transform.position, player.transform.position) > enemyStats.startAttackDist + 0.5f)
+        Vector3 target;
+        if (visibleEmployers.Length > 0)
+        {
+            target = visibleEmployers[0].position;
+        } else
+        {
+            target = player.transform.position;
+        }
+
+        if (Vector3.Distance(transform.position, target) > enemyStats.startAttackDist + 0.5f)
         {
             SetState(EnemyStates.Chasing);
             return;
@@ -410,14 +428,14 @@ public abstract class EnemyAI : MonoBehaviour
     // -------- Helper Methods! Just help for all EnemyAIs, basically -----
     public bool ReachedDestination()
     {
-        if (!agent.pathPending &&
-        agent.remainingDistance <= agent.stoppingDistance &&
-        (!agent.hasPath || agent.velocity.sqrMagnitude == 0f))
-        {
-            return true;
-        } 
-        return false;
-        
+        return ReachedDestination(0f);
+    }
+
+    public bool ReachedDestination(float margin)
+    {
+        return !agent.pathPending &&
+            agent.remainingDistance <= agent.stoppingDistance + margin &&
+            (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
     }
     public void RotateManually(Vector3 targetPos) // sometimes the NavMeshAgent sucks at rotating, use this instead.
     {
@@ -479,44 +497,50 @@ public abstract class EnemyAI : MonoBehaviour
 
         }
     }
-    public void EnemyDeath()
+    public virtual void EnemyDeath()
     {
         //stop ai logic
-        // enabled = false;
+        enabled = false;
 
         // stop movement
         if (agent != null)
         {
-            // agent.isStopped = true;
-            // agent.enabled = false;
+            agent.isStopped = true;
+            agent.enabled = false;
         }
 
         //disable collision
-        // Collider collider = GetComponent<Collider>();
-        // if (collider != null)
-        // {
-        //     collider.enabled = false;
-        // }
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
 
         //play blood spatter or death animation here
 
-        // Destroy(gameObject, 0.0f);
+        Destroy(gameObject, 0.0f);
     }
     public void ReceiveSound(Vector3 position, float decibels)
     {
         if (visiblePlayers == null || visibleEmployers == null) return;
-        Debug.Log(transform.name + " hears the sound of " + decibels.ToString());
+        // Debug.Log(transform.name + " hears the sound of " + decibels.ToString());
         lastPlayerPos = position;
 
         if (visiblePlayers.Length == 0 && 
         visibleEmployers.Length == 0 && 
         currentState != EnemyStates.Attacking && 
-        currentState != EnemyStates.Chasing)
+        currentState != EnemyStates.Chasing && 
+        currentState != EnemyStates.Searching)
         {
-            Debug.Log(transform.name + " hears the sound 2!");
+            // Debug.Log(transform.name + " hears the sound 2!");
             SetState(EnemyStates.Searching);
             return;
         } 
+    }
+
+    void OnDestroy()
+    {
+        RoundManager.Instance.enemies.Remove(this);
     }
     
     // ------- SETTERS --------------
@@ -538,8 +562,6 @@ public abstract class EnemyAI : MonoBehaviour
     public RuntimeStats GetRuntimeStats() => runtimeStats;
     public int GetWanderRNGCalls() => wanderRNG.CallsMade;
     public Vector3 GetLastPlayerPos() => lastPlayerPos;
-
-
 }
 
 public enum EnemyStates

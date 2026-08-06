@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "Prop", menuName = "ScriptableObjects/Prop")]
 public class Prop : ScriptableObject
 {
+    public GameObject prefab;
     public bool physicsProp;
     public bool activatable;
 

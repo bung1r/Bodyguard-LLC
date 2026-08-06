@@ -19,6 +19,7 @@ public class Objective : MonoBehaviour
             if (progress >= objectiveSO.objectiveLength)
             {
                 isComplete = true;
+                RoundManager.Instance.CompleteObjective(this);
             }
         }
     }

@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 kickOffset = new Vector3(0,-0.5f,0);
     
     public GameObject guntext;
+    public GameObject bulletPrefab;
+    public Transform barrel;
 
     private bool sneakLatch; //stupid fucking variable but its very late rn
     private bool jumpedThisFrame; //SUPER lazy hotfix yo :sob: but i am very tired right now and this deadline fast approaches
@@ -289,8 +291,9 @@ public class PlayerController : MonoBehaviour
         {
             guntext.SetActive(false);
 
-            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 500.0f, ((1 << 7) | (1 << 8)) ))
+            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, 500.0f, (1 << 7) | (1 << 8) | (1 << 3) | (1 << 10) | (1 << 11))) 
             {
+                VisualizeBullet(barrel.transform.position, hit.point, 0.2f);
                 Debug.Log($"hit {hit.collider.gameObject.name} with bullet!");
 
                 if (hit.collider.gameObject.layer == 7)
@@ -298,12 +301,15 @@ public class PlayerController : MonoBehaviour
                     StatManager enemyStatManager = hit.transform.root.GetComponent<StatManager>(); // AAUUGHHHGHGHHH
                     DamageData damageData = new DamageData{source = gameObject, damageType = DamageType.Pierce, damageAmount = 2f};
                     enemyStatManager.TakeDamage(damageData);
-                } else {
+                } else if (hit.collider.gameObject.layer == 8) {
                     if (!hit.collider.gameObject.GetComponent<Rigidbody>()) {return;}
 
                     Vector3 direction = playerCamera.transform.forward; //(hit.transform.position - transform.position).normalized;
                     hit.collider.gameObject.GetComponent<Rigidbody>().AddForce(direction * 7.0f, ForceMode.Impulse);
                     hit.collider.gameObject.GetComponent<BaseProp>().TakeDamage(new DamageData{source = gameObject, damageType = DamageType.Bullet, damageAmount = 2f});
+                } else
+                {
+                    // hit a wall or something. You suck at aiming!
                 }
             }
 
@@ -403,19 +409,38 @@ public class PlayerController : MonoBehaviour
     }
     public void OnNextWave()
     {
+        checkpointsLeft = 2;
         StartCoroutine(TrySetCheckpoint(true));
+
         // we have to wait untilt he next frame because of Start()
     }
+
+    public void VisualizeBullet(Vector3 pos1, Vector3 pos2, float time)
+    {
+        GameObject bullet = Instantiate(bulletPrefab);
+        bullet.transform.position = (pos1 + pos2) / 2f;
+        bullet.transform.localScale = new Vector3(
+            bullet.transform.localScale.x, 
+            bullet.transform.localScale.y, 
+            Vector3.Distance(pos1, pos2)
+        );
+        bullet.transform.localRotation = Quaternion.LookRotation(pos1 - pos2);
+        
+        Destroy(bullet, time);
+    }
+
     // ----------- SETTERS -----------------
     public void SetPlayerMovementState(PlayerMovementState state) => movementState = state;
     public void SetInAction(bool value) => inAction = value;
     public void SetIsGrabbing(bool value) => isGrabbing = value;
     public void SetLastPlacedCheckpoint(float value) => lastPlacedCheckpoint = value;
     public void SetCheckpointsLeft(int value) => checkpointsLeft = value;
+    public void SetAmmo(int value) => ammoCount = value;
     // ----------- GETTERS -----------------
     public PlayerMovementState GetPlayerMovementState() => movementState;
     public bool GetInAction() => inAction;
     public bool GetIsGrabbing() => isGrabbing;
     public float GetLastPlacedCheckpoint() => lastPlacedCheckpoint;
     public int GetCheckpointsLeft() => checkpointsLeft;
+    public int GetAmmo() => ammoCount;
 }

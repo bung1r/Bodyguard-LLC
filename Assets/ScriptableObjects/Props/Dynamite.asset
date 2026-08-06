@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de385bac3dde5ed49aa7a65d4080a95f, type: 3}
   m_Name: Dynamite
   m_EditorClassIdentifier: Assembly-CSharp::Prop
+  prefab: {fileID: 2752370976787009578, guid: 1b8a3efd33f8da3448ca90a059c76cc6, type: 3}
   physicsProp: 1
   activatable: 1
   minDamageVelocity: 2

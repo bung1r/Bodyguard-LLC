@@ -29,7 +29,11 @@ public class TimelineUI : MonoBehaviour
     }
     void Start()
     {
+        
+        
+
         roundManager = RoundManager.Instance;
+        roundEndTime = roundManager.gameDuration;
         startSecondsUI.text = roundStartTime.ToString() + "s";
         endSecondsUI.text = roundEndTime.ToString() + "s";
     }

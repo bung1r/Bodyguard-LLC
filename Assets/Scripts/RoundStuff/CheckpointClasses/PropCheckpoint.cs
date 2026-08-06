@@ -17,6 +17,7 @@ public class PropCheckpoint : ICheckpointBase
         if (propRef == null)
         {
             propRef = RoundManager.Instantiate(propPrefab);
+            RoundManager.Instance.props.Add(propRef.GetComponent<BaseProp>());
         }
         Rigidbody rb = propRef.GetComponent<Rigidbody>();
         NavMeshObstacle obstacle = propRef.GetComponent<NavMeshObstacle>();
@@ -41,7 +42,7 @@ public class PropCheckpoint : ICheckpointBase
     
     public PropCheckpoint(BaseProp baseProp) {
         propRef = baseProp.gameObject;
-        propPrefab = baseProp.prefab;
+        propPrefab = baseProp.propProperties.prefab;
         position = propRef.transform.position;
         rotation = propRef.transform.rotation;
         Rigidbody rb = propRef.GetComponent<Rigidbody>();

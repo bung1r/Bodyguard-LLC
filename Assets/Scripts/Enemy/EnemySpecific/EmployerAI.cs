@@ -100,6 +100,11 @@ public class EmployerAI : EnemyAI
         }
 
     }
+    public override void EnemyDeath()
+    {
+        // when the employer dies, simply 'return by death'
+        player.GetComponent<PlayerController>()?.ReturnByDeath();
+    }
     public override void ExitSearching()
     {
         agent.updateRotation = true;

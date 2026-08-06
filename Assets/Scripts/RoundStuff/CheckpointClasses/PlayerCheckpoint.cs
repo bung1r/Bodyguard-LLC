@@ -13,6 +13,8 @@ public class PlayerCheckpoint : ICheckpointBase
     bool inAction;
     bool isFixed;
     int checkpointsLeft;
+    int ammo;
+    
     // put more stats like ammo and holding and I DON'T KNOW OK???
 
     public void ReturnByDeath(float timeSaved)
@@ -29,6 +31,7 @@ public class PlayerCheckpoint : ICheckpointBase
         playerController.SetInAction(inAction);
         playerController.SetIsGrabbing(isGrabbing);
         playerController.SetCheckpointsLeft(checkpointsLeft);
+        playerController.SetAmmo(ammo);
         
         playerRef.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
 
@@ -47,6 +50,7 @@ public class PlayerCheckpoint : ICheckpointBase
         isGrabbing = player.GetIsGrabbing();
         inAction = player.GetInAction();
         checkpointsLeft = player.GetCheckpointsLeft();
+        ammo = player.GetAmmo();
 
         this.isFixed = isFixed;
     
