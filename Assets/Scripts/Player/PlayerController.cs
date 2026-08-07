@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] Transform playerCamera;
-    [SerializeField] private TMP_Text ammoCounter;
-    private int ammoCount = 6;
+    [SerializeField] private List<GameObject> ammoCounter;
+
 
     [HideInInspector] public enum PlayerMovementState { Running, Sneaking, Airborne }
     // Running is basically an idle state as well, as action + weapon should retain sprint speed(?)
@@ -41,6 +41,8 @@ public class PlayerController : MonoBehaviour
     private List<Checkpoint> checkpoints = new List<Checkpoint>();
 
     [SerializeField] private float kickForce = 9.0f;
+
+    [SerializeField] private int ammoCount = 6;
 
     private Vector3 kickOffset = new Vector3(0,-0.5f,0);
     
@@ -77,8 +79,6 @@ public class PlayerController : MonoBehaviour
 
         movementState = PlayerMovementState.Running;
         speed = baseStats.speed * baseStats.sprintSpeedMult;
-
-        ammoCounter.text = "Ammo: " + ammoCount;
 
         inAction = false;
 
@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour
             if (ammoCount > 0)
             {
                 ammoCount--;
-                ammoCounter.text = "Ammo: " + ammoCount;
+                ammoCounter[ammoCount].SetActive(false);
             }
             else
             {
