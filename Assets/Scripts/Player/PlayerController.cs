@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     private bool inAction;
     private bool inGun;
     private bool isGrabbing;
+    private BaseProp grabbedProp; 
 
     [SerializeField] private float jumpHeight = 0.65f;
     [SerializeField] private float gravity = -9.8f;

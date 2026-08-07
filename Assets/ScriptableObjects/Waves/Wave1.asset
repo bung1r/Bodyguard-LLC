@@ -15,8 +15,8 @@ MonoBehaviour:
   startTime: 3
   spawns:
   - enemy: {fileID: 2568326305697152407, guid: 0fdfd7b20aefe0444a4d580f1b5d917f, type: 3}
-    spawnAmount: 1
+    spawnAmount: 3
     spawnPosition: {x: 0, y: 0, z: 10}
   - enemy: {fileID: 2537827474150688703, guid: 86e36bbe791c7044d843db3f530caacb, type: 3}
     spawnAmount: 1
-    spawnPosition: {x: -30, y: 0, z: -10}
+    spawnPosition: {x: 10, y: 0, z: 5}

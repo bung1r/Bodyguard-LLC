@@ -12,6 +12,8 @@ public class PropCheckpoint : ICheckpointBase
     Vector3 angularVel;
     float durability; 
     bool isGrabbed;
+    bool useGravity;
+    RigidbodyConstraints constraints;
     public void ReturnByDeath(float timeSaved)
     {
         if (propRef == null)
@@ -19,7 +21,10 @@ public class PropCheckpoint : ICheckpointBase
             propRef = RoundManager.Instantiate(propPrefab);
             RoundManager.Instance.props.Add(propRef.GetComponent<BaseProp>());
         }
-        Rigidbody rb = propRef.GetComponent<Rigidbody>();
+
+
+        
+
         NavMeshObstacle obstacle = propRef.GetComponent<NavMeshObstacle>();
 
 
@@ -31,9 +36,12 @@ public class PropCheckpoint : ICheckpointBase
         // Debug.Log(propRef.transform.position);
         propRef.transform.rotation = rotation;
         obstacle.enabled = true;
-        
+
+        Rigidbody rb = propRef.GetComponent<Rigidbody>();
+        rb.useGravity = useGravity;
         rb.linearVelocity = linearVel;
         rb.angularVelocity = angularVel;
+        rb.constraints = constraints;
         
         BaseProp baseProp = propRef.GetComponent<BaseProp>();
         baseProp.SetDurability(durability);
@@ -48,6 +56,8 @@ public class PropCheckpoint : ICheckpointBase
         Rigidbody rb = propRef.GetComponent<Rigidbody>();
         linearVel = rb.linearVelocity;
         angularVel = rb.angularVelocity;
+        useGravity = rb.useGravity;
+        constraints = rb.constraints;
         durability = baseProp.GetDurability();
         isGrabbed = baseProp.GetIsGrabbed();
     }
