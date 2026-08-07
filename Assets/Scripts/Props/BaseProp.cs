@@ -35,7 +35,7 @@ public class BaseProp : MonoBehaviour
 
                 Vector3 velocityChange = Vector3.ClampMagnitude(desiredVelocity - propBody.linearVelocity, 200.0f);
                 
-                Debug.Log($"TargetSpeed = {targetSpeed}, VelocityChange = {velocityChange}");
+                // Debug.Log($"TargetSpeed = {targetSpeed}, VelocityChange = {velocityChange}");
                 propBody.AddForce(velocityChange, ForceMode.Acceleration);
             } else
             {

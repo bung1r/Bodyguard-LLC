@@ -22,12 +22,30 @@ public abstract class EnemyAI : MonoBehaviour
     protected HashSet<Transform> hitHash = new HashSet<Transform>();
     protected bool enableVisionCone = true;
     protected float stunTime = 1f;
-
+    [SerializeField] protected bool enableAnimator;
+    protected Animator animator;
+    protected int runningHash;
+    protected int walkingHash;
+    protected int attackHash;
+    protected int standingHash;
+    protected int changeStatesHash;
+    protected int changeMovementHash;
     public int seed = 1_000_000;
     GameRandom wanderRNG;
     void Awake()
     {
         wanderRNG = new GameRandom(seed + 1);
+
+        animator = GetComponent<Animator>();
+        if (enableAnimator)
+        {
+            runningHash = Animator.StringToHash("Running");
+            walkingHash = Animator.StringToHash("Walking");
+            standingHash = Animator.StringToHash("Standing");
+            attackHash = Animator.StringToHash("Attack");
+            changeStatesHash = Animator.StringToHash("ChangeStates");
+            changeMovementHash = Animator.StringToHash("ChangeMovement");
+        }
 
     }
     
@@ -36,6 +54,8 @@ public abstract class EnemyAI : MonoBehaviour
         // enemy stuff
         statManager = GetComponent<StatManager>();
         agent = GetComponent<NavMeshAgent>();
+
+
         
 
         runtimeStats = statManager.GetRuntimeStats();
@@ -126,6 +146,8 @@ public abstract class EnemyAI : MonoBehaviour
                 case EnemyStates.Frantic: EnterFrantic(); break;
                 case EnemyStates.GoToPos: EnterGoToPos(); break;
             }
+
+            HandleAnimStates(true, false);
         }
     }
     // When in the GoToPos state, this value determines where it will go. 
@@ -138,12 +160,48 @@ public abstract class EnemyAI : MonoBehaviour
     {
         goToPosPosition = position;
     }
-    
+    public virtual void HandleAnimStates(bool changeState = false, bool attack = false)
+    {
+        if (!enableAnimator) return;
+
+        bool lastWalking = animator.GetBool(walkingHash);
+        bool lastRunning = animator.GetBool(runningHash);
+        bool lastStanding = animator.GetBool(standingHash);
+
+        animator.SetBool(walkingHash, false);
+        animator.SetBool(runningHash, false);
+        animator.SetBool(standingHash, false);
+
+        if (!agent.isStopped && agent.velocity.sqrMagnitude > 0.01f)
+        {
+            if (agent.speed > baseStats.speed)
+            {
+                animator.SetBool(runningHash, true);
+            } else
+            {
+                animator.SetBool(walkingHash, true);
+            }
+        } else
+        {
+            animator.SetBool(standingHash, true);
+        }
+
+        if (lastWalking != animator.GetBool(walkingHash) ||
+            lastRunning != animator.GetBool(runningHash) || 
+            lastStanding != animator.GetBool(standingHash))
+        {
+            animator.SetTrigger(changeMovementHash);
+        }
+
+        if (attack) animator.SetTrigger(attackHash);
+        if (changeState) animator.SetTrigger(changeStatesHash);
+    }
     public virtual void Think()
     {
         // The AI is thinking, pretty easy to understand. 
         // do not override in most cases
         if (enableVisionCone) VisionCone();
+        if (enableAnimator) HandleAnimStates();
 
         switch(currentState)
         {
@@ -192,7 +250,7 @@ public abstract class EnemyAI : MonoBehaviour
         if (ReachedDestination(1f))
         {
             Collider[] nodes = Physics.OverlapSphere(transform.position, 15f, 1 << 12);
-            Debug.Log(nodes.Length);
+            // Debug.Log(nodes.Length);
             if (nodes.Length > 0)
             {
                 Collider selectedNode = nodes[wanderRNG.Next(0, nodes.Length)];
@@ -487,6 +545,9 @@ public abstract class EnemyAI : MonoBehaviour
 
         Vector3 finalDirection = spread * direction;
         
+    
+        HandleAnimStates(true, true);
+
         if(Physics.Raycast(barrel.position, finalDirection, out RaycastHit hit, 200f, attackMask))
         {
             VisualizeBullet(barrel.position, hit.point);
@@ -555,6 +616,9 @@ public abstract class EnemyAI : MonoBehaviour
     public void SetLastAttacked(float value) => lastAttacked = value;
     public void SetLastStunned(float value) => lastStunned = value;
     public void SetLastPlayerPos(Vector3 value) => lastPlayerPos = value;
+    public void SetIsRunningAnim(bool value) => animator.SetBool(runningHash, value);
+    public void SetIsWalkingAnim(bool value) => animator.SetBool(walkingHash, value);
+    public void SetIsStandingAnim(bool value) => animator.SetBool(standingHash, value);
     // ------- GETTERS --------------
     public float GetLastAttacked() => lastAttacked;
     public float GetLastStunned() => lastStunned;
@@ -562,6 +626,10 @@ public abstract class EnemyAI : MonoBehaviour
     public RuntimeStats GetRuntimeStats() => runtimeStats;
     public int GetWanderRNGCalls() => wanderRNG.CallsMade;
     public Vector3 GetLastPlayerPos() => lastPlayerPos;
+    public bool GetEnableAnimator() => enableAnimator;
+    public bool GetIsRunningAnim() => animator.GetBool(runningHash);
+    public bool GetIsWalkingAnim() => animator.GetBool(walkingHash);
+    public bool GetIsStandingAnim() => animator.GetBool(standingHash);
 }
 
 public enum EnemyStates

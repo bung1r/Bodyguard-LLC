@@ -23,6 +23,12 @@ public class EnemyCheckpoint : ICheckpointBase
     protected bool isStopped;
     protected bool updateRotation;
     
+    // Animator Variables
+    protected bool enableAnimator;
+    protected bool isRunningAnim;
+    protected bool isWalkingAnim;
+    protected bool isStandingAnim;
+
 
     // RNG and seed stuff
     protected int seed; // a little unnecessary, but why not?
@@ -65,6 +71,14 @@ public class EnemyCheckpoint : ICheckpointBase
             agent.velocity = velocity;
         }
         
+        // Animator stuff
+        if (enableAnimator)
+        {
+            
+            enemyAI.SetIsRunningAnim(isRunningAnim);
+            enemyAI.SetIsWalkingAnim(isWalkingAnim);
+            enemyAI.SetIsStandingAnim(isStandingAnim);
+        }
 
         enemyAI.GetComponent<StatManager>().GetRuntimeStats().GetBaseStats().currentHealth = currentHP;
     }
@@ -82,6 +96,15 @@ public class EnemyCheckpoint : ICheckpointBase
         isStopped = agent.isStopped;
         updateRotation = agent.updateRotation;
         velocity = agent.velocity;
+
+        // animtor stuff
+        enableAnimator = enemyAI.GetEnableAnimator();
+        if (enableAnimator)
+        {
+            isRunningAnim = enemyAI.GetIsRunningAnim();
+            isWalkingAnim = enemyAI.GetIsWalkingAnim();
+            isStandingAnim = enemyAI.GetIsStandingAnim();
+        }
 
         // Seed and RNG stuff
         seed = enemyAI.seed;
