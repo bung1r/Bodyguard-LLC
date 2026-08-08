@@ -81,10 +81,7 @@ public class RoundManager : MonoBehaviour
         int enemyMask = (1 << 7);
         Collider[] enemyColliders = Physics.OverlapSphere(position, decibels, enemyMask);
         HashSet<Transform> enemyHash = new HashSet<Transform>();
-        if (decibels > 10f)
-        {
-            Debug.Log("HELLO???");
-        }
+     
         foreach (Collider enemy in enemyColliders)
         {
             // Debug.Log(enemyColliders.Length);

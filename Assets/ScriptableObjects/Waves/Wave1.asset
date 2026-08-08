@@ -20,3 +20,6 @@ MonoBehaviour:
   - enemy: {fileID: 2537827474150688703, guid: 86e36bbe791c7044d843db3f530caacb, type: 3}
     spawnAmount: 1
     spawnPosition: {x: 10, y: 0, z: 5}
+  - enemy: {fileID: 5284792066631157803, guid: be94f0d6100f6b94ca2f7994e69ed48a, type: 3}
+    spawnAmount: 1
+    spawnPosition: {x: 5, y: 0, z: 5}

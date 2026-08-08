@@ -109,6 +109,7 @@ MonoBehaviour:
   initialState: 0
   afterStunState: 2
   currentState: 0
+  enableAnimator: 1
   seed: 1000000
 --- !u!65 &7788671908110115663
 BoxCollider:

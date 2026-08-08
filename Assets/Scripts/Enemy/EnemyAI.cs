@@ -91,7 +91,17 @@ public abstract class EnemyAI : MonoBehaviour
                 float angle = Vector3.Angle(transform.forward, direction);
 
                 if (angle > viewAngle / 2f) continue;
-                transformsHash.Add(collider.transform.root);
+                
+                int mask = (1 << 3) | (1 << 6) | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11);
+                if (Physics.Raycast(transform.position, direction, out RaycastHit hit, enemyStats.aggroDistance, mask))
+                {
+                    if (collider.transform == hit.collider.transform)
+                    {
+                        // it's in the radius, but can you actually see it?
+                        transformsHash.Add(collider.transform.root);
+                    }
+                }
+
             }
 
             return transformsHash.ToArray(); // fallback
@@ -238,7 +248,7 @@ public abstract class EnemyAI : MonoBehaviour
     }
     public virtual void Wandering()
     {
-
+        agent.updateRotation = true;
         if (visiblePlayers.Length > 0 || visibleEmployers.Length > 0)
         {
             SetState(EnemyStates.Chasing);

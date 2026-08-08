@@ -14,7 +14,7 @@ public class SniperAI : EnemyAI
         // Debug.Log(visiblePlayers);
         if (visibleEmployers.Length > 0 || visiblePlayers.Length > 0)
         {
-            Debug.Log("I do be seein players");
+            // Debug.Log("I do be seein players");
             SetState(EnemyStates.Attacking);
             return;
         }
