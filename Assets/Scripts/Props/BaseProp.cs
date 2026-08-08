@@ -91,7 +91,7 @@ public class BaseProp : MonoBehaviour
         {
             DestroyProp();
         }
-        print(currentDurability);
+        print(currentDurability + $" From {damageData.damageType}");
     }
 
     public virtual void DestroyProp()

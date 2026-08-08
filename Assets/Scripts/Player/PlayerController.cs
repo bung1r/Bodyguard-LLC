@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     private bool inAction;
     private bool inGun;
     private bool isGrabbing;
-    private BaseProp grabbedProp; 
+    private GameObject heldItem; // I'd like to sincerely apologize for adding this - S
 
     [SerializeField] private float jumpHeight = 0.65f;
     [SerializeField] private float gravity = -9.8f;
@@ -169,6 +169,45 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
+
+            // Plugs
+
+            if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit plugHit, 4.5f, (1 << 13)))
+            {
+                if (isGrabbing && plugHit.collider.gameObject.CompareTag("InputSocket"))
+                {
+                    heldItem.GetComponent<OutputSocket>().EndPlug(plugHit.collider.gameObject);
+                    inAction = false;
+                    heldItem = null;
+                    isGrabbing = false; // im so tired rn, combine isGrabbing and heldItem, only need to null-check hI for !iG
+                } else if (!inAction && plugHit.collider.gameObject.CompareTag("OutputSocket"))
+                {
+                    inAction = true;
+                    heldItem = plugHit.collider.gameObject;
+                    isGrabbing = true;
+                    plugHit.collider.gameObject.GetComponent<OutputSocket>().StartPlug();   
+                }
+                return;
+            }
+
+            if (isGrabbing)
+            {
+                if (heldItem.TryGetComponent<BaseProp>(out BaseProp propScript))
+                {
+                    inAction = false;
+                    isGrabbing = false;
+                    propScript.EndGrab();
+                    heldItem = null;
+                } else
+                {
+                    inAction = false;
+                    isGrabbing = false;
+                    heldItem.GetComponent<OutputSocket>().CancelPlug();
+                    heldItem = null;
+                }
+                return;
+            }
+
             // a bunch of stuff, 'innit?
 
             if(Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit grabHit, 4.5f, (1 << 8)))
@@ -182,8 +221,10 @@ public class PlayerController : MonoBehaviour
                 {
                     inAction = true;
                     isGrabbing = true;
+                    heldItem = grabHit.collider.gameObject;
                     grabHit.collider.gameObject.GetComponent<BaseProp>().StartGrab(playerCamera.transform);   
                 }
+                return;
             }
 
             if (employer.GetState() == EnemyStates.Following)
@@ -200,6 +241,8 @@ public class PlayerController : MonoBehaviour
                     // if you click on the employer, he will go back to work. 
                     employer.SetState(EnemyStates.Chasing);
                 }
+
+                return;
                 
             }
         }

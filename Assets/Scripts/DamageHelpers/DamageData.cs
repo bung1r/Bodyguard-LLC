@@ -19,5 +19,5 @@ public class DamageData
 
 public enum DamageType
 {
-    Blunt, Pierce, Slash, Bullet, Other
+    Blunt, Pierce, Slash, Bullet, Explosion, Fire, Other
 }

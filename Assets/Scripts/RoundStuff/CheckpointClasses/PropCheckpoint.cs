@@ -14,7 +14,7 @@ public class PropCheckpoint : ICheckpointBase
     bool isGrabbed;
     bool useGravity;
     RigidbodyConstraints constraints;
-    public void ReturnByDeath(float timeSaved)
+    public virtual void ReturnByDeath(float timeSaved)
     {
         if (propRef == null)
         {

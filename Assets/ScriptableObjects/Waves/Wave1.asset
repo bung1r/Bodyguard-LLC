@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8710f2449e69ce941a697d4828dfcd1e, type: 3}
   m_Name: Wave1
   m_EditorClassIdentifier: Assembly-CSharp::Wave
-  startTime: 3
+  startTime: 29
   spawns:
   - enemy: {fileID: 2568326305697152407, guid: 0fdfd7b20aefe0444a4d580f1b5d917f, type: 3}
     spawnAmount: 3
